@@ -1,45 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Drag and drop the shapes</title>
+    <title>Minesweeper</title>
 
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
-    <script>
-      var stageWidth = 640;
-      var stageHeight = 480;
-      var stage;
-      var update = true;
-      var shape1, shape2, shape3;
-
-      function init() {
-        //new stage
-        stage = new createjs.Stage("canvas");
-        //stage.enableMouseOver();
-
-        var circle = new createjs.Shape();
-        circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
-        circle.x = 100;
-        circle.y = 100;
-        stage.addChild(circle);
-
-        stage.update();
-      }
-
-      function pressHandler(e) {
-        e.onMouseMove = function(ev) {
-          e.target.x = ev.stageX;
-          e.target.y = ev.stageY;
-          update = true;
-        };
-      }
-
-      function tick() {
-        if (update) {
-          update = false;
-          stage.update();
-        }
-      }
-    </script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/cell.js"></script>
   </head>
 
   <body onload="init()">
