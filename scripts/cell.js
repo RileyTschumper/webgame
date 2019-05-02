@@ -8,10 +8,10 @@ class Cell {
     this.neighbors = 0;
     this.mine = false;
     this.flag = false;
-    this.shown = true;
+    this.shown = false;
   }
 
-  draw(stage) {
+  draw() {
     var rect = new createjs.Shape();
     rect.graphics.beginFill("white");
     rect.graphics.beginStroke("black");
@@ -36,19 +36,66 @@ class Cell {
         rect.graphics.beginStroke("black");
         rect.graphics.drawRect(this.x, this.y, this.size, this.size);
 
-        if (this.neighbors != 0) {
+        if (this.neighbors != 0 && this.neighbors != undefined) {
           var text = new createjs.Text(this.neighbors, "10px Arial", "black");
+          text.textAlign = "center";
+          text.textBaseline = "middle";
           text.x = this.x + this.size / 2;
           text.y = this.y + this.size / 2;
+          stage.addChild(rect);
           stage.addChild(text);
+        } else {
+          stage.addChild(rect);
         }
-        stage.addChildAt(rect, 0);
       }
+    } else if (this.flag == true) {
+      console.log("in flag draw");
+      /*
+      var image = new Image();
+      image.src = "../images/flag.svg";
+      var bitmap = new createjs.Bitmap(image);
+      bitmap.x = this.x;
+      bitmap.y = this.y;
+      bitmap.scaleY = 280 / 200;
+      bitmap.scaleX = 140 / 100;
+      stage.addChild(bitmap);
+      */
+      rect = new createjs.Shape();
+      rect.graphics.beginFill("red");
+      rect.graphics.beginStroke("black");
+      rect.graphics.drawRect(this.x, this.y, this.size, this.size);
+      stage.addChild(rect);
     }
   }
 
   show() {
     this.shown = true;
+    if (this.neighbors == 0) {
+      console.log("neighbors is 0");
+      this.floodfill();
+    }
+  }
+
+  flag() {
+    this.flag = true;
+  }
+
+  floodfill() {
+    for (var x = -1; x <= 1; x++) {
+      var i = this.i + x;
+      if (i < 0 || i >= rows) continue;
+
+      for (var y = -1; y <= 1; y++) {
+        var j = this.j + y;
+        if (j < 0 || j >= cols) continue;
+
+        var neighbor = grid[i][j];
+
+        if (!neighbor.shown) {
+          neighbor.show();
+        }
+      }
+    }
   }
 
   countNeighbors(grid, x, y) {

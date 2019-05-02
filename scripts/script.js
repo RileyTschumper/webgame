@@ -1,18 +1,18 @@
 var stage;
+var grid;
+var rows = 10;
+var cols = 10;
+var size = 30;
+var numMines = 10;
 
 function init() {
-  var rows = 10;
-  var cols = 10;
-  var size = 30;
-  var numMines = 10;
-
   document.getElementById("canvas").setAttribute("width", rows * size);
   document.getElementById("canvas").setAttribute("height", cols * size);
 
   //new stage
   stage = new createjs.Stage("canvas");
 
-  var grid = make2DArray(rows, cols);
+  grid = make2DArray(rows, cols);
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
       grid[i][j] = new Cell(i, j, size);
@@ -42,22 +42,31 @@ function init() {
   //draws each object on the canvas
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
-      grid[i][j].draw(stage);
+      grid[i][j].draw();
     }
   }
 
   stage.on("stagemousedown", function(e) {
+    console.log("event: ");
+    console.log(e.nativeEvent.button);
     var x = e.stageX;
     var y = e.stageY;
-    console.log(x);
-    console.log(y);
+    //console.log(x);
+    //console.log(y);
     var i = Math.floor(x / size);
     var j = Math.floor(y / size);
+    if (e.nativeEvent.button == 2) {
+      console.log("flagged");
+      grid[i][j].flag = true;
+    } else {
+      grid[i][j].show();
+    }
+    for (var i = 0; i < rows; i++) {
+      for (var j = 0; j < cols; j++) {
+        grid[i][j].draw();
+      }
+    }
 
-    console.log("i: " + i);
-    console.log("j: " + j);
-    grid[i][j].show();
-    grid[i][j].draw(stage);
     stage.update();
   });
 
