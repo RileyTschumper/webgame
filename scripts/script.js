@@ -51,8 +51,6 @@ function init() {
     console.log(e.nativeEvent.button);
     var x = e.stageX;
     var y = e.stageY;
-    //console.log(x);
-    //console.log(y);
     var i = Math.floor(x / size);
     var j = Math.floor(y / size);
     if (e.nativeEvent.button == 2) {
