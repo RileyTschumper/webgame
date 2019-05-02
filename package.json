@@ -1,0 +1,20 @@
+{
+    "name": "webgame",
+    "version": "1.0.0",
+    "description": "CISC 375 Web Game",
+    "author": "Riley Tschumper <tsch3471@stthomas.edu>",
+    "contributors": [
+        "Riley Tschumper <tsch3471@stthomas.edu>",
+	"Lucy Post <post2573@stthomas.edu"
+    ],
+    "main": "server.js",
+    "dependencies": {
+        "express": "^4.16.4",
+        "sqlite3": "^4.0.6",
+        "express-session": "^1.16.1"
+    },
+    "engines": {
+        "node": ">= 10.0.0",
+        "npm": ">= 6.0.0"
+    }
+}
