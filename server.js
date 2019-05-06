@@ -10,7 +10,7 @@ var app = express();
 var port = 8017;
 
 var db_filename = path.join(__dirname, 'db', 'webgame_database.sqlite3');
-//var public_dir = path.join(__dirname, 'public');
+var public_dir = path.join(__dirname, 'public');
 
 var db = new sqlite3.Database(db_filename, sqlite3, (err) => {
 	if(err) {
@@ -31,7 +31,12 @@ app.use(session({
 //app.use(express.static(public_dir));
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname + '/public/login.html'));
+	if(req.session.loggedin){
+		res.redirect('/home');
+	}
+	else{	
+		res.sendFile(path.join(public_dir, 'login.html'));
+	}
 });
 
 app.get('/home', (req, res) => {
@@ -104,5 +109,4 @@ app.post('/create', (req,res) => {
 		});
 	}
 });
-
 var server = app.listen(port);
