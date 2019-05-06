@@ -5,13 +5,14 @@
     "author": "Riley Tschumper <tsch3471@stthomas.edu>",
     "contributors": [
         "Riley Tschumper <tsch3471@stthomas.edu>",
-	"Lucy Post <post2573@stthomas.edu"
+        "Lucy Post <post2573@stthomas.edu"
     ],
     "main": "server.js",
     "dependencies": {
+        "blueimp-md5": "^2.10.0",
         "express": "^4.16.4",
-        "sqlite3": "^4.0.6",
-        "express-session": "^1.16.1"
+        "express-session": "^1.16.1",
+        "sqlite3": "^4.0.6"
     },
     "engines": {
         "node": ">= 10.0.0",
