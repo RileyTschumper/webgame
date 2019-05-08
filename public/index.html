@@ -4,16 +4,26 @@
     <title>Minesweeper</title>
 
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
-    <script src="scripts/script.js"></script>
-    <script src="scripts/cell.js"></script>
+    <script src="/public/scripts/script.js"></script>
+    <script src="/public/scripts/cell.js"></script>
+    <script src="/lib/easytimer/dist/easytimer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel ="stylesheet" type ="text/css" href ="/public/css/style.css" />
+  </head>
   </head>
 
   <body onload="init()">
+    <div id="overlay" onclick="removeOverlay()">
+      <div id="start_text">Click to Start</div>
+    </div>
     <canvas
       oncontextmenu="return false;"
       id="canvas"
       width="640"
       height="480"
     ></canvas>
+    <div id="timer">
+      <div class="values">00:00:00</div>
+    </div>
   </body>
 </html>

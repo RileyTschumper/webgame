@@ -70,14 +70,11 @@ class Cell {
 
   show() {
     this.shown = true;
+    this.flag = false;
     if (this.neighbors == 0) {
       console.log("neighbors is 0");
       this.floodfill();
     }
-  }
-
-  flag() {
-    this.flag = true;
   }
 
   floodfill() {
