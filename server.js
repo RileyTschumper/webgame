@@ -35,14 +35,12 @@ app.get('/', (req, res) => {
 		res.redirect('/home');
 	}
 	else{
-		//res.sendFile(path.join(public_dir, 'index.html'));	
 		res.sendFile(path.join(public_dir, 'login.html'));
 	}
 });
 
 app.get('/home', (req, res) => {
 	if(req.session.loggedin){
-		//res.send('Welcome back, ' + req.session.username + '!');
 		res.sendFile(path.join(public_dir, 'index.html'));
 	}
 	else{
