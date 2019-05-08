@@ -28,21 +28,22 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-//app.use(express.static(public_dir));
+app.use('/home', express.static(public_dir));
 
 app.get('/', (req, res) => {
 	if(req.session.loggedin){
 		res.redirect('/home');
 	}
-	else{	
+	else{
+		//res.sendFile(path.join(public_dir, 'index.html'));	
 		res.sendFile(path.join(public_dir, 'login.html'));
 	}
 });
 
 app.get('/home', (req, res) => {
 	if(req.session.loggedin){
-		res.send('Welcome back, ' + req.session.username + '!');
-		res.sendFile(path.join(public_dir, 'login.html'));
+		//res.send('Welcome back, ' + req.session.username + '!');
+		res.sendFile(path.join(public_dir, 'index.html'));
 	}
 	else{
 		res.send('Please login to view this page!');
