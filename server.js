@@ -11,7 +11,7 @@ var port = 8017;
 
 var db_filename = path.join(__dirname, 'db', 'webgame_database.sqlite3');
 var public_dir = path.join(__dirname, 'public');
-
+var resource_dir = path.join(__dirname, 'resources');
 var db = new sqlite3.Database(db_filename, sqlite3, (err) => {
 	if(err) {
 		console.log('Error opening database' + db_filename);
@@ -28,10 +28,12 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-app.use('/home', express.static(public_dir));
+
+app.use(express.static(resource_dir));
 
 app.get('/', (req, res) => {
 	if(req.session.loggedin){
+		console.log("going home");
 		res.redirect('/home');
 	}
 	else{
@@ -41,12 +43,13 @@ app.get('/', (req, res) => {
 
 app.get('/home', (req, res) => {
 	if(req.session.loggedin){
+		console.log("about to send index");
 		res.sendFile(path.join(public_dir, 'index.html'));
 	}
 	else{
 		res.send('Please login to view this page!');
 	}
-	res.end();
+	//res.end();
 });
 
 app.post('/auth', (req, res) => {
@@ -65,8 +68,8 @@ app.post('/auth', (req, res) => {
 			}
 			else {
 				res.send('Incorrect username and/or password');
+				//res.end();
 			}
-			res.end();
 		});
 	}
 	else {
