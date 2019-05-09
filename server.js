@@ -6,6 +6,7 @@ var bodyParser = require("body-parser");
 var sqlite3 = require("sqlite3");
 var md5 = require("blueimp-md5");
 var WebSocket = require("ws");
+var http = require("http");
 
 var app = express();
 var server = http.createServer(app);
@@ -15,8 +16,9 @@ var wss = new WebSocket.Server({ server: server });
 var db_filename = path.join(__dirname, "db", "webgame_database.sqlite3");
 var public_dir = path.join(__dirname, "public");
 var resource_dir = path.join(__dirname, "resources");
-var db = new sqlite3.Database(db_filename, sqlite3, err => {
-  if (err) {
+var db = new sqlite3.Database(db_filename, sqlite3, function(err){
+  console.log("Something");
+	if (err) {
     console.log("Error opening database" + db_filename);
   } else {
     console.log("Now connected to " + db_filename);
@@ -33,7 +35,7 @@ app.use(
 );
 
 app.use(express.static(resource_dir));
-
+console.log("here");
 var clients = {};
 var clientUsernames = [];
 wss.on("connection", ws => {
