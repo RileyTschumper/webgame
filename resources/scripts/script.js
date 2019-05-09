@@ -78,7 +78,7 @@ function init() {
     console.log("Connection successful!");
   };
   ws.onmessage = event => {
-    console.log(event.data);
+    //console.log(event.data);
     var message = JSON.parse(event.data);
     if (message.msg === "username") {
       app.username = message.data;
