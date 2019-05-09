@@ -5,8 +5,19 @@ var cols = 10;
 var size = 30;
 var numMines = 10;
 var timer;
+var app;
+var ws;
 
 function init() {
+  app = new Vue({
+    el: "#app",
+    data: {
+      leaderboard: [],
+      username: "",
+      difficulty: 0,
+      users: []
+    }
+  });
   document.getElementById("canvas").setAttribute("width", rows * size);
   document.getElementById("canvas").setAttribute("height", cols * size);
 
@@ -28,9 +39,9 @@ function init() {
     if (e.nativeEvent.button == 2) {
       console.log("flagged");
       grid[i][j].flag = true;
-    } 
+    }
     //if user clicks on mine
-    else if (grid[i][j].mine == true){
+    else if (grid[i][j].mine == true) {
       console.log("game over");
       gameOver();
     }
@@ -47,24 +58,35 @@ function init() {
     var correctFlags = 0;
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < cols; j++) {
-        if(grid[i][j].flag == true && grid[i][j].mine == true){
+        if (grid[i][j].flag == true && grid[i][j].mine == true) {
           correctFlags++;
         }
       }
     }
 
-    if(correctFlags == numMines){
+    if (correctFlags == numMines) {
       console.log("you win!");
     }
 
     stage.update();
   });
-
   stage.update();
+
+  var port = window.location.port || "80";
+  ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
+  ws.onopen = event => {
+    console.log("Connection successful!");
+  };
+  ws.onmessage = event => {
+    console.log(event.data);
+    var message = JSON.parse(event.data);
+    if (message.msg === "client_count") {
+      app.client_count = message.data;
+    }
+  };
 }
 
-function createMinefield(){
-
+function createMinefield() {
   grid = make2DArray(rows, cols);
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
@@ -72,7 +94,6 @@ function createMinefield(){
     }
   }
 
-  
   //places mines
   var placedMines = 0;
   while (placedMines < numMines) {
@@ -101,22 +122,22 @@ function createMinefield(){
   }
 }
 
-function removeOverlay(){
+function removeOverlay() {
   document.getElementById("overlay").style.display = "none";
 
   timer = new easytimer.Timer();
   timer.start();
-  timer.addEventListener('secondsUpdated', function (e) {
-    $('#timer').html(timer.getTimeValues().toString());
+  timer.addEventListener("secondsUpdated", function(e) {
+    $("#timer").html(timer.getTimeValues().toString());
   });
 }
 
-function addOverlay(){
+function addOverlay() {
   timer.stop();
   document.getElementById("overlay").style.display = "block";
 }
 
-function gameOver(){
+function gameOver() {
   //show full board
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
@@ -129,7 +150,7 @@ function gameOver(){
       grid[i][j].draw();
     }
   }
-  
+
   //reset board
   createMinefield();
 
