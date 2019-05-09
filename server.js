@@ -34,6 +34,35 @@ app.use(
 
 app.use(express.static(resource_dir));
 
+var clients = {};
+var clientUsernames = [];
+wss.on("connection", ws => {
+  var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+  console.log("New connection: " + client_id);
+  clients[client_id] = ws;
+  console.log(clients);
+
+  ws.on("message", message => {
+    console.log("Message from " + client_id + ": " + message);
+  });
+  ws.on("close", () => {
+    console.log("Client disconnected: " + client_id);
+    delete clients[client_id];
+  });
+
+  //var username = { username: req.session.username };
+  //client[client_id].send(JSON.stringify(username));
+  /*
+  var id;
+  var connectedClients = {msg: 'client_count', data: client_count};
+  for (id in clients) {
+	  if (clients.hasOwnProperty(id)) {
+		  clients[id].send(JSON.stringify(message));
+	  }
+  }
+  */
+});
+
 app.get("/", (req, res) => {
   if (req.session.loggedin) {
     console.log("going home");
@@ -46,35 +75,6 @@ app.get("/", (req, res) => {
 app.get("/home", (req, res) => {
   if (req.session.loggedin) {
     res.sendFile(path.join(public_dir, "index.html"));
-
-    var clients = {};
-    var clientUsernames = [];
-    wss.on("connection", ws => {
-      var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
-      console.log("New connection: " + client_id);
-      clients[client_id] = ws;
-      console.log(clients);
-
-      ws.on("message", message => {
-        console.log("Message from " + client_id + ": " + message);
-      });
-      ws.on("close", () => {
-        console.log("Client disconnected: " + client_id);
-        delete clients[client_id];
-      });
-
-      var username = { username: req.session.username };
-      client[client_id].send(JSON.stringify(username));
-      /*
-	  var id;
-	  var connectedClients = {msg: 'client_count', data: client_count};
-	  for (id in clients) {
-		  if (clients.hasOwnProperty(id)) {
-			  clients[id].send(JSON.stringify(message));
-		  }
-	  }
-	  */
-    });
   } else {
     res.send("Please login to view this page!");
   }
