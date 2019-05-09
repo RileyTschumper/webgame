@@ -16,9 +16,9 @@ var wss = new WebSocket.Server({ server: server });
 var db_filename = path.join(__dirname, "db", "webgame_database.sqlite3");
 var public_dir = path.join(__dirname, "public");
 var resource_dir = path.join(__dirname, "resources");
-var db = new sqlite3.Database(db_filename, sqlite3, function(err){
+var db = new sqlite3.Database(db_filename, sqlite3, function(err) {
   console.log("Something");
-	if (err) {
+  if (err) {
     console.log("Error opening database" + db_filename);
   } else {
     console.log("Now connected to " + db_filename);
@@ -43,40 +43,39 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(public_dir, "login.html"));
   }
 });
-
+var clients = {};
+var client_usernames = [];
 app.get("/home", (req, res) => {
   if (req.session.loggedin) {
     res.sendFile(path.join(public_dir, "index.html"));
-var clients = {};
-var clientUsernames = [];
-wss.on("connection", ws => {
-  var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
-  console.log("New connection: " + client_id);
-  clients[client_id] = ws;
-  console.log(clients);
+    wss.on("connection", ws => {
+      var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+      console.log("New connection: " + client_id);
+      clients[client_id] = ws;
+      if (!client_usernames.includes(req.session.username)) {
+        client_usernames.push(req.session.username);
+      }
+      //console.log(clients);
 
-  ws.on("message", message => {
-    console.log("Message from " + client_id + ": " + message);
-  });
-  ws.on("close", () => {
-    console.log("Client disconnected: " + client_id);
-    delete clients[client_id];
-  });
+      ws.on("message", message => {
+        console.log("Message from " + client_id + ": " + message);
+      });
+      ws.on("close", () => {
+        console.log("Client disconnected: " + client_id);
+        delete clients[client_id];
+      });
 
-  var username = { msg: "username", data: req.session.username };
-  clients[client_id].send(JSON.stringify(username));
-  /*
-  var id;
-  var connectedClients = {msg: 'client_count', data: client_count};
-  for (id in clients) {
-	  if (clients.hasOwnProperty(id)) {
-		  clients[id].send(JSON.stringify(message));
-	  }
-  }
-  */
-});
+      var username = { msg: "username", data: req.session.username };
+      clients[client_id].send(JSON.stringify(username));
 
-
+      var id;
+      var usernameList = { msg: "username_list", data: client_usernames };
+      for (id in clients) {
+        if (clients.hasOwnProperty(id)) {
+          clients[id].send(JSON.stringify(usernameList));
+        }
+      }
+    });
   } else {
     res.send("Please login to view this page!");
   }

@@ -82,7 +82,11 @@ function init() {
     var message = JSON.parse(event.data);
     if (message.msg === "username") {
       app.username = message.data;
-		console.log(app.username);
+		  console.log(app.username);
+    }
+    else(message.msg === "username_list"){
+      app.users = message.data;
+      console.log(app.users);
     }
   };
 }
