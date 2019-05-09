@@ -33,6 +33,24 @@ app.use(
     saveUninitialized: true
   })
 );
+var clients = {};
+var client_usernames = [];
+
+wss.on("connection", ws => {
+  var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+  console.log("New connection: " + client_id);
+  clients[client_id] = ws;
+
+  //console.log(clients);
+
+  ws.on("message", message => {
+    console.log("Message from " + client_id + ": " + message);
+  });
+  ws.on("close", () => {
+    console.log("Client disconnected: " + client_id);
+    delete clients[client_id];
+  });
+});
 
 app.use(express.static(resource_dir));
 app.get("/", (req, res) => {
@@ -43,39 +61,24 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(public_dir, "login.html"));
   }
 });
-var clients = {};
-var client_usernames = [];
+
 app.get("/home", (req, res) => {
   if (req.session.loggedin) {
     res.sendFile(path.join(public_dir, "index.html"));
-    wss.on("connection", ws => {
-      var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
-      console.log("New connection: " + client_id);
-      clients[client_id] = ws;
-      if (!client_usernames.includes(req.session.username)) {
-        client_usernames.push(req.session.username);
+
+    if (!client_usernames.includes(req.session.username)) {
+      client_usernames.push(req.session.username);
+    }
+    var username = { msg: "username", data: req.session.username };
+    clients[client_id].send(JSON.stringify(username));
+
+    var id;
+    var usernameList = { msg: "username_list", data: client_usernames };
+    for (id in clients) {
+      if (clients.hasOwnProperty(id)) {
+        clients[id].send(JSON.stringify(usernameList));
       }
-      //console.log(clients);
-
-      ws.on("message", message => {
-        console.log("Message from " + client_id + ": " + message);
-      });
-      ws.on("close", () => {
-        console.log("Client disconnected: " + client_id);
-        delete clients[client_id];
-      });
-
-      var username = { msg: "username", data: req.session.username };
-      clients[client_id].send(JSON.stringify(username));
-
-      var id;
-      var usernameList = { msg: "username_list", data: client_usernames };
-      for (id in clients) {
-        if (clients.hasOwnProperty(id)) {
-          clients[id].send(JSON.stringify(usernameList));
-        }
-      }
-    });
+    }
   } else {
     res.send("Please login to view this page!");
   }
