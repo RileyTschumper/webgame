@@ -35,7 +35,18 @@ app.use(
 );
 
 app.use(express.static(resource_dir));
-console.log("here");
+app.get("/", (req, res) => {
+  if (req.session.loggedin) {
+    console.log("going home");
+    res.redirect("/home");
+  } else {
+    res.sendFile(path.join(public_dir, "login.html"));
+  }
+});
+
+app.get("/home", (req, res) => {
+  if (req.session.loggedin) {
+    res.sendFile(path.join(public_dir, "index.html"));
 var clients = {};
 var clientUsernames = [];
 wss.on("connection", ws => {
@@ -52,8 +63,8 @@ wss.on("connection", ws => {
     delete clients[client_id];
   });
 
-  //var username = { username: req.session.username };
-  //client[client_id].send(JSON.stringify(username));
+  var username = { msg: "username", data: req.session.username };
+  clients[client_id].send(JSON.stringify(username));
   /*
   var id;
   var connectedClients = {msg: 'client_count', data: client_count};
@@ -65,18 +76,7 @@ wss.on("connection", ws => {
   */
 });
 
-app.get("/", (req, res) => {
-  if (req.session.loggedin) {
-    console.log("going home");
-    res.redirect("/home");
-  } else {
-    res.sendFile(path.join(public_dir, "login.html"));
-  }
-});
 
-app.get("/home", (req, res) => {
-  if (req.session.loggedin) {
-    res.sendFile(path.join(public_dir, "index.html"));
   } else {
     res.send("Please login to view this page!");
   }
@@ -151,4 +151,4 @@ app.post("/create", (req, res) => {
     );
   }
 });
-var server = app.listen(port);
+server.listen(port, "0.0.0.0");

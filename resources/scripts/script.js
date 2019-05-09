@@ -80,8 +80,9 @@ function init() {
   ws.onmessage = event => {
     console.log(event.data);
     var message = JSON.parse(event.data);
-    if (message.msg === "client_count") {
-      app.client_count = message.data;
+    if (message.msg === "username") {
+      app.username = message.data;
+		console.log(app.username);
     }
   };
 }
