@@ -48,41 +48,41 @@ var client_usernames = [];
 app.get("/home", (req, res) => {
   if (req.session.loggedin) {
     res.sendFile(path.join(public_dir, "index.html"));
-    wss.on("connection", connection);
+    wss.on("connection", ws => {
+      var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+      console.log("New connection: " + client_id);
+      clients[client_id] = ws;
+      if (!client_usernames.includes(req.session.username)) {
+        client_usernames.push(req.session.username);
+      }
+      //console.log(clients);
+
+      ws.on("message", message => {
+        console.log("Message from " + client_id + ": " + message);
+      });
+      ws.on("close", () => {
+        console.log("Client disconnected: " + client_id);
+        delete clients[client_id];
+      });
+
+      var username = { msg: "username", data: req.session.username };
+      clients[client_id].send(JSON.stringify(username));
+
+      var id;
+      var usernameList = { msg: "username_list", data: client_usernames };
+      for (id in clients) {
+        if (clients.hasOwnProperty(id)) {
+          clients[id].send(JSON.stringify(usernameList));
+        }
+      }
+    });
   } else {
     res.send("Please login to view this page!");
   }
   //res.end();
 });
 
-function connection(ws) {
-  var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
-  console.log("New connection: " + client_id);
-  clients[client_id] = ws;
-  if (!client_usernames.includes(req.session.username)) {
-    client_usernames.push(req.session.username);
-  }
-  //console.log(clients);
-
-  ws.on("message", message => {
-    console.log("Message from " + client_id + ": " + message);
-  });
-  ws.on("close", () => {
-    console.log("Client disconnected: " + client_id);
-    delete clients[client_id];
-  });
-
-  var username = { msg: "username", data: req.session.username };
-  clients[client_id].send(JSON.stringify(username));
-
-  var id;
-  var usernameList = { msg: "username_list", data: client_usernames };
-  for (id in clients) {
-    if (clients.hasOwnProperty(id)) {
-      clients[id].send(JSON.stringify(usernameList));
-    }
-  }
-}
+function connection(ws) {}
 
 app.post("/auth", (req, res) => {
   username = req.body.username;
