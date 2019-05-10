@@ -66,8 +66,12 @@ function init() {
 
     if (correctFlags == numMines) {
       console.log("you win!");
-      var secondsOnClock = $("#timer").html(timer.getTimeValues().toString());
-      console.log(secondsOnClock);
+      var secondsOnClock = timer.getTimeValues().seconds;
+	  var minutesOnClock = timer.getTimeValues().minutes;
+	  var hoursOnClock = timer.getTimeValues().hours;
+	  var totalTimeInSeconds = secondsOnClock + (minutesOnClock * 60) + (hoursOnClock * 60 * 60);
+	  sendTime(totalTimeInSeconds);
+      console.log(totalTimeInSeconds);
     }
 
     stage.update();
@@ -88,8 +92,16 @@ function init() {
     } else if (message.msg === "username_list") {
       app.users = message.data;
       console.log(app.users);
-    }
+	} else if (message.msg == "leaderboard"){
+	  app.leaderboard = message.data;
+	  console.log(app.leaderboard);
+	}    
+
   };
+}
+
+function sendTime(time){
+	ws.send(time);
 }
 
 function createMinefield() {
