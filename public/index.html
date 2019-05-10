@@ -34,6 +34,9 @@
         <ul>
             <li v-for="user in users"> {{ user }}</li>
         </ul>
+		<ol>
+			<li v-for="leader in leaderboard"> {{ leader.username }} {{ leader.time }}</li>
+		</ol>
     </div>
   </body>
 </html>
