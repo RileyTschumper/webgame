@@ -74,9 +74,9 @@ function init() {
 
   var port = window.location.port || "80";
   ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
-  ws.onopen = event => {
+  ws.onopen = event => {	
     console.log("Connection successful!");
-  };
+  }
   ws.onmessage = event => {
     //console.log(event.data);
     var message = JSON.parse(event.data);

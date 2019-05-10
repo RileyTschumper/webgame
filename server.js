@@ -7,7 +7,7 @@ var sqlite3 = require("sqlite3");
 var md5 = require("blueimp-md5");
 var WebSocket = require("ws");
 var http = require("http");
-
+var fs = require("fs");
 var app = express();
 var server = http.createServer(app);
 var port = 8017;
@@ -35,6 +35,52 @@ app.use(
 );
 
 app.use(express.static(resource_dir));
+
+var clients = {};
+var client_usernames = [];
+var client_id;
+//function connect(){
+//console.log("in connect");
+wss.on("connection", ws => {
+	client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+	console.log("New connection: " + client_id);
+	console.log(client_id);
+	clients[client_id] = ws;
+
+	//console.log(clients);
+
+	ws.on("message", message => {
+		console.log("Message from " + client_id + ": " + message);
+	});
+	ws.on("close", () => {
+		console.log("Client disconnected: " + client_id);
+		delete clients[client_id];
+	});
+	
+	sendUsernameList();
+
+});
+//}
+function sendUsername(username){
+	if (!client_usernames.includes(username)) {
+		client_usernames.push(username);
+	}
+	console.log(username);
+	var usernameString = {msg: "username", data: username};
+	console.log(clients);
+	clients[client_id].send(JSON.stringify(usernameString));
+}
+
+function sendUsernameList(){
+	var id;
+	var usernameList = { msg: "username_list", data: client_usernames };
+	for (id in clients) {
+		if (clients.hasOwnProperty(id)) {
+	  		clients[id].send(JSON.stringify(usernameList));
+		}
+	}	
+}
+
 app.get("/", (req, res) => {
   if (req.session.loggedin) {
     console.log("going home");
@@ -43,46 +89,28 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(public_dir, "login.html"));
   }
 });
-var clients = {};
-var client_usernames = [];
+
 app.get("/home", (req, res) => {
   if (req.session.loggedin) {
-    res.sendFile(path.join(public_dir, "index.html"));
-    wss.on("connection", ws => {
-      var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
-      console.log("New connection: " + client_id);
-      clients[client_id] = ws;
-      if (!client_usernames.includes(req.session.username)) {
-        client_usernames.push(req.session.username);
-      }
-      //console.log(clients);
-
-      ws.on("message", message => {
-        console.log("Message from " + client_id + ": " + message);
-      });
-      ws.on("close", () => {
-        console.log("Client disconnected: " + client_id);
-        delete clients[client_id];
-      });
-
-      var username = { msg: "username", data: req.session.username };
-      clients[client_id].send(JSON.stringify(username));
-
-      var id;
-      var usernameList = { msg: "username_list", data: client_usernames };
-      for (id in clients) {
-        if (clients.hasOwnProperty(id)) {
-          clients[id].send(JSON.stringify(usernameList));
-        }
-      }
-    });
-  } else {
+  fs.readFile(path.join(public_dir, "index.html"), "utf8", (err, data) =>{
+	console.log(data);
+	var index = data.replace("|||USER|||", req.session.username);
+	res.send(index);
+	
+  });
+	client_usernames.push(req.session.username);
+	sendUsernameList();
+	//var username = req.session.username;
+	//connect();
+	//console.log(username);
+	//sendUsername(username);
+	//sendUsernameList();
+ } else {
     res.send("Please login to view this page!");
   }
   //res.end();
 });
 
-function connection(ws) {}
 
 app.post("/auth", (req, res) => {
   username = req.body.username;
