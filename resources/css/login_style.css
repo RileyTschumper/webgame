@@ -48,8 +48,8 @@ input#batman[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -59,8 +59,8 @@ input#batwoman[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -70,8 +70,8 @@ input#captainamerica[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -81,8 +81,8 @@ input#darthvader[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
