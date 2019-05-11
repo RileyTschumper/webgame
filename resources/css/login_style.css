@@ -92,8 +92,8 @@ input#deadpool[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -103,8 +103,8 @@ input#flash[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -114,8 +114,8 @@ input#groot[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -126,8 +126,8 @@ input#hulk[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -138,8 +138,8 @@ input#ironman[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -150,8 +150,8 @@ input#robot[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -161,8 +161,8 @@ input#spiderman[type=radio] + label
 	background-size: contain;
 	border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -172,8 +172,8 @@ input#stormtrooper[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -183,8 +183,8 @@ input#superman[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -194,8 +194,8 @@ input#superwoman[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -205,8 +205,8 @@ input#viking[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -216,8 +216,8 @@ input#wally[type=radio] + label
 	background-size: contain;
     border-color: white;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -225,8 +225,8 @@ input#batman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -234,8 +234,8 @@ input#batwoman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -243,8 +243,8 @@ input#captainamerica[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -252,8 +252,8 @@ input#darthvader[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -261,8 +261,8 @@ input#deadpool[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -270,8 +270,8 @@ input#flash[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -279,8 +279,8 @@ input#groot[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -288,8 +288,8 @@ input#hulk[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -297,8 +297,8 @@ input#ironman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -306,8 +306,8 @@ input#robot[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -315,8 +315,8 @@ input#spiderman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -324,8 +324,8 @@ input#stromtrooper[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -333,8 +333,8 @@ input#superman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -342,8 +342,8 @@ input#superwoman[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -351,8 +351,8 @@ input#viking[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
@@ -360,8 +360,8 @@ input#wally[type=radio]:checked + label
 {
     border-color: red;
     border-style: solid;
-    height: 74px;
-    width: 74px;
+    height: 65px;
+    width: 65px;
     display:inline-block;
     padding: 0 0 0 0px;
 }
