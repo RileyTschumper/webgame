@@ -1,0 +1,348 @@
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+.login-form h1 {
+    text-align: center;
+    color: #4d4d4d;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+}
+.login-form input[type="password"],
+.login-form input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #dddddd;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+.login-form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+}
+.login-form button {
+    width: 100%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+input[type=radio] {
+    display:none;
+}
+     
+input#batman[type=radio] + label
+{
+    background-image: url("images/batman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#batwoman[type=radio] + label
+{
+    background-image: url("images/batwoman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#captainamerica[type=radio] + label
+{
+    background-image: url("images/captainamerica.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#darthvader[type=radio] + label
+{
+    background-image: url("images/darthvader.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#deadpool[type=radio] + label
+{
+    background-image: url("images/deadpool.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#flash[type=radio] + label
+{
+    background-image: url("images/flash.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#groot[type=radio] + label
+{
+    background-image: url("images/groot.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#hulk[type=radio] + label
+{
+    background-image: url("images/hulk.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#ironman[type=radio] + label
+{
+    background-image: url("images/ironman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#robot[type=radio] + label
+{
+    background-image: url("images/robot.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#spiderman[type=radio] + label
+{
+    background-image: url("images/spiderman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#stromtrooper[type=radio] + label
+{
+    background-image: url("images/stromtrooper.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#superman[type=radio] + label
+{
+    background-image: url("images/superman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#superwoman[type=radio] + label
+{
+    background-image: url("images/superwoman.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#viking[type=radio] + label
+{
+    background-image: url("images/viking.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#wally[type=radio] + label
+{
+    background-image: url("images/wally.png");
+    border-color: white;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#batman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#batwoman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#captainamerica[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#darthvader[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#deadpool[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#flash[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#groot[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#hulk[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#ironman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#robot[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#spiderman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#stromtrooper[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#superman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#superwoman[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#viking[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+input#wally[type=radio]:checked + label
+{
+    border-color: red;
+    border-style: solid;
+    height: 50px;
+    width: 50px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}

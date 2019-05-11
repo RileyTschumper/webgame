@@ -1,87 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Login</title>
-    <style>
-      .login-form {
-        width: 300px;
-        margin: 0 auto;
-        font-family: Tahoma, Geneva, sans-serif;
-      }
-      .login-form h1 {
-        text-align: center;
-        color: #4d4d4d;
-        font-size: 24px;
-        padding: 20px 0 20px 0;
-      }
-      .login-form input[type="password"],
-      .login-form input[type="text"] {
-        width: 100%;
-        padding: 15px;
-        border: 1px solid #dddddd;
-        margin-bottom: 15px;
-        box-sizing: border-box;
-      }
-      .login-form input[type="submit"] {
-        width: 100%;
-        padding: 15px;
-        background-color: #535b63;
-        border: 0;
-        box-sizing: border-box;
-        cursor: pointer;
-        font-weight: bold;
-        color: #ffffff;
-      }
-      .login-form button {
-        width: 100%;
-        padding: 15px;
-        background-color: #535b63;
-        border: 0;
-        box-sizing: border-box;
-        cursor: pointer;
-        font-weight: bold;
-        color: #ffffff;
-      }
-    </style>
-    <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="lib/image-picker/image-picker.css" />
-	<script type="application/javascript" src="lib/image-picker/image-picker.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<script type="application/javascript" src="scripts/login_script.js"></script>
-  </head>
-  <body onload="init()">
-	<div id="app">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <style>
+
+  </style>
+  <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script type="application/javascript" src="scripts/login_script.js"></script>
+</head>
+
+<body onload="init()">
+  <div id="app">
     <div v-if="new_user == false" class="login-form">
       <h1>Login</h1>
       <form action="auth" method="POST">
         <input type="text" name="username" placeholder="Username" required />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-		<select class="image-picker">
-			<option data-img-src="images/avatar.png" value="avatar.png">Avatar</option>
-			<option data-img-src="images/avatar.png" value="avatar.png">Avatar</option>
-		</select>
+        <input type="password" name="password" placeholder="Password" required />
         <input type="submit" />
-		<h1> {{ info_text }} </h1>
-		<button type="button" onclick="buttonClick()"> {{ button_text }} </button>
+        <h1> {{ info_text }} </h1>
+        <button type="button" onclick="buttonClick()"> {{ button_text }} </button>
       </form>
     </div>
-	<div v-else class="login-form">
-		<h1>Create an Account</h1>
-		<form action="create" method="POST">
-			<input type="text" name="username" placeholder="Username" required />
-			<input type="password" name="password" placeholder="Password" required />
-			<input type="password" name="password_confirm" placeholder="Confirm Password" required />
-			<input type="submit" />
-			<h1> {{ info_text }} </h1>
-			<button type="button" onclick="buttonClick()"> {{ button_text }} </button>
-		</form>
-	</div>
-	</div>
-  </body>
+    <div v-else class="login-form">
+      <h1>Create an Account</h1>
+      <form action="create" method="POST">
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="password" name="password_confirm" placeholder="Confirm Password" required />
+        <input type="radio" name='avatar' id="batman" value="images/batman.png" /><label for="batman"></label>
+        <input type="radio" name='avatar' id="batwoman" value="images/batwoman.png" /><label for="batwoman"></label>
+        <input type="radio" name='avatar' id="captainamerica" value="images/captainamerica.png" /><label
+          for="captainamerica"></label>
+        <input type="radio" name='avatar' id="darthvader" value="images/darthvader.png" /><label
+          for="darthvader"></label>
+        <br />
+        <input type="radio" name='avatar' id="deadpool" value="images/deadpool.png" /><label for="deadpool"></label>
+        <input type="radio" name='avatar' id="flash" value="images/flash.png" /><label for="flash"></label>
+        <input type="radio" name='avatar' id="groot" value="images/groot.png" /><label for="groot"></label>
+        <input type="radio" name='avatar' id="hulk" value="images/hulk.png" /><label for="hulk"></label>
+        <br />
+        <input type="radio" name='avatar' id="ironman" value="images/ironman.png" /><label for="ironman"></label>
+        <input type="radio" name='avatar' id="robot" value="images/robot.png" /><label for="robot"></label>
+        <input type="radio" name='avatar' id="spiderman" value="images/spiderman.png" /><label for="spiderman"></label>
+        <input type="radio" name='avatar' id="stromtrooper" value="images/stromtrooper.png" /><label
+          for="stromtrooper"></label>
+        <br />
+        <input type="radio" name='avatar' id="superman" value="images/superman.png" /><label for="superman"></label>
+        <input type="radio" name='avatar' id="superwoman" value="images/superwoman.png" /><label
+          for="superwoman"></label>
+        <input type="radio" name='avatar' id="viking" value="images/viking.png" /><label for="viking"></label>
+        <input type="radio" name='avatar' id="wally" value="images/wally.png" /><label for="wally"></label>
+        <br />
+        <input type="submit" />
+        <h1> {{ info_text }} </h1>
+        <button type="button" onclick="buttonClick()"> {{ button_text }} </button>
+      </form>
+    </div>
+  </div>
+</body>
+
 </html>
