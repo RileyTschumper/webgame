@@ -248,6 +248,8 @@ app.post("/create", (req, res) => {
   username = req.body.username;
   password = req.body.password;
   password_confirm = req.body.password_confirm;
+  avatar = req.body.avatar;
+  console.log(avatar);
   if (password != password_confirm) {
     res.send("Passwords do not match. Re-enter your password.");
     res.end();
