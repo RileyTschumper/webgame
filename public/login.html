@@ -44,6 +44,9 @@
         color: #ffffff;
       }
     </style>
+    <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/image-picker/image-picker.css" />
+	<script type="application/javascript" src="lib/image-picker/image-picker.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 	<script type="application/javascript" src="scripts/login_script.js"></script>
   </head>
@@ -59,8 +62,9 @@
           placeholder="Password"
           required
         />
-		<select>
-			
+		<select class="image-picker">
+			<option data-img-src="images/avatar.png" value="avatar.png">Avatar</option>
+			<option data-img-src="images/avatar.png" value="avatar.png">Avatar</option>
 		</select>
         <input type="submit" />
 		<h1> {{ info_text }} </h1>

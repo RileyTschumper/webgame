@@ -17,6 +17,7 @@ var wss = new WebSocket.Server({ server: server });
 var db_filename = path.join(__dirname, "db", "webgame_database.sqlite3");
 var public_dir = path.join(__dirname, "public");
 var resource_dir = path.join(__dirname, "resources");
+var image_dir = path.join(__dirname, "images");
 var db = new sqlite3.Database(db_filename, function(err) {
   if (err) {
     console.log("Error opening database" + db_filename);
