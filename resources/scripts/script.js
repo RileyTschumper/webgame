@@ -1,9 +1,9 @@
 var stage;
 var grid;
-var rows = 10;
-var cols = 10;
-var size = 30;
-var numMines = 10;
+//var rows = 10;
+//var cols = 10;
+//var size = 30;
+//var numMines = 10;
 var timer;
 var app;
 var ws;
@@ -14,68 +14,25 @@ function init() {
     data: {
       leaderboard: [],
       username: "",
-      difficulty: 0,
-      users: []
+      difficultyValue: 0,
+	  difficulty: "Beginner",
+      users: [],
+	  rows: 10,
+	  cols: 10,
+	  size: 30,
+   	  mines: 10
     }
   });
-  document.getElementById("canvas").setAttribute("width", rows * size);
-  document.getElementById("canvas").setAttribute("height", cols * size);
-
-  //new stage
+  
+  updateCanvas();
+   //new stage
   stage = new createjs.Stage("canvas");
 
   //creates minesweeper board
   createMinefield();
 
-  //when the stage is clicked...
-  stage.on("stagemousedown", function(e) {
-    console.log("event: ");
-    console.log(e.nativeEvent.button);
-    var x = e.stageX;
-    var y = e.stageY;
-    var i = Math.floor(x / size);
-    var j = Math.floor(y / size);
-    //if user right clicks to place flag
-    if (e.nativeEvent.button == 2) {
-      console.log("flagged");
-      grid[i][j].flag = true;
-    }
-    //if user clicks on mine
-    else if (grid[i][j].mine == true) {
-      console.log("game over");
-      gameOver();
-    }
-    //left click and not on a mine
-    else {
-      grid[i][j].show();
-    }
-    for (var i = 0; i < rows; i++) {
-      for (var j = 0; j < cols; j++) {
-        grid[i][j].draw();
-      }
-    }
+  addStageListener();
 
-    var correctFlags = 0;
-    for (var i = 0; i < rows; i++) {
-      for (var j = 0; j < cols; j++) {
-        if (grid[i][j].flag == true && grid[i][j].mine == true) {
-          correctFlags++;
-        }
-      }
-    }
-
-    if (correctFlags == numMines) {
-      console.log("you win!");
-      var secondsOnClock = timer.getTimeValues().seconds;
-	  var minutesOnClock = timer.getTimeValues().minutes;
-	  var hoursOnClock = timer.getTimeValues().hours;
-	  var totalTimeInSeconds = secondsOnClock + (minutesOnClock * 60) + (hoursOnClock * 60 * 60);
-	  sendTime(totalTimeInSeconds);
-      console.log(totalTimeInSeconds);
-    }
-
-    stage.update();
-  });
   stage.update();
 
   var port = window.location.port || "80";
@@ -100,23 +57,110 @@ function init() {
   };
 }
 
+function addStageListener(){
+  //when the stage is clicked...
+  stage.on("stagemousedown", function(e) {
+    console.log("event: ");
+    console.log(e.nativeEvent.button);
+    var x = e.stageX;
+    var y = e.stageY;
+    var i = Math.floor(x / app.size);
+    var j = Math.floor(y / app.size);
+    //if user right clicks to place flag
+    if (e.nativeEvent.button == 2) {
+      console.log("flagged");
+      grid[i][j].flag = true;
+    }
+    //if user clicks on mine
+    else if (grid[i][j].mine == true) {
+      console.log("game over");
+      gameOver();
+    }
+    //left click and not on a mine
+    else {
+      grid[i][j].show();
+    }
+    for (var i = 0; i < app.rows; i++) {
+      for (var j = 0; j < app.cols; j++) {
+        grid[i][j].draw();
+      }
+    }
+
+    var correctFlags = 0;
+    for (var i = 0; i < app.rows; i++) {
+      for (var j = 0; j < app.cols; j++) {
+        if (grid[i][j].flag == true && grid[i][j].mine == true) {
+          correctFlags++;
+        }
+      }
+    }
+
+    if (correctFlags == app.mines) {
+      console.log("you win!");
+      var secondsOnClock = timer.getTimeValues().seconds;
+	  var minutesOnClock = timer.getTimeValues().minutes;
+	  var hoursOnClock = timer.getTimeValues().hours;
+	  var totalTimeInSeconds = secondsOnClock + (minutesOnClock * 60) + (hoursOnClock * 60 * 60);
+	  sendTime(totalTimeInSeconds);
+      console.log(totalTimeInSeconds);
+    }
+
+    stage.update();
+  });
+
+}
+function updateCanvas(){
+	document.getElementById("canvas").setAttribute("width", app.rows * app.size);
+	document.getElementById("canvas").setAttribute("height", app.cols * app.size);
+}
+
+function changeDifficulty(diff){
+	if(diff == 0){
+		app.difficulty = "Beginner";
+		app.difficultyValue = 0;
+		app.rows = 10;
+		app.cols = 10;
+		app.mines = 10;
+	}
+	else if(diff == 1){
+		app.difficulty = "Novice";
+		app.difficultyValue = 1;
+		app.rows = 15;
+		app.cols = 15;
+		app.mines = 20;
+	}
+	else if(diff == 2){
+		app.difficulty = "Expert";
+		app.difficultyValue = 2;
+		app.rows = 20;
+		app.cols = 20;
+		app.mines = 30;
+	}	
+	updateCanvas();
+	createMinefield();
+	addStageListener();
+	stage.update();
+	//add overlay
+    addOverlay();
+}
+
 function sendTime(time){
 	ws.send(time);
 }
 
 function createMinefield() {
-  grid = make2DArray(rows, cols);
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
-      grid[i][j] = new Cell(i, j, size);
+  grid = make2DArray(app.rows, app.cols);
+  for (var i = 0; i < app.rows; i++) {
+    for (var j = 0; j < app.cols; j++) {
+      grid[i][j] = new Cell(i, j, app.size);
     }
   }
 
   //places mines
   var placedMines = 0;
-  while (placedMines < numMines) {
-    var rand_i = Math.floor(Math.random() * rows);
-    var rand_j = Math.floor(Math.random() * cols);
+  while (placedMines < app.mines) {
+    var rand_i = Math.floor(Math.random() * app.rows);
+    var rand_j = Math.floor(Math.random() * app.cols);
     console.log(rand_i);
     console.log(rand_j);
     if (!grid[rand_i][rand_j].mine) {
@@ -126,15 +170,15 @@ function createMinefield() {
     }
   }
 
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
+  for (var i = 0; i < app.rows; i++) {
+    for (var j = 0; j < app.cols; j++) {
       grid[i][j].countNeighbors(grid, i, j);
     }
   }
 
   //draws each object on the canvas
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
+  for (var i = 0; i < app.rows; i++) {
+    for (var j = 0; j < app.cols; j++) {
       grid[i][j].draw();
     }
   }
@@ -157,14 +201,14 @@ function addOverlay() {
 
 function gameOver() {
   //show full board
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
+  for (var i = 0; i < app.rows; i++) {
+    for (var j = 0; j < app.cols; j++) {
       grid[i][j].shown = true;
     }
   }
 
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
+  for (var i = 0; i < app.rows; i++) {
+    for (var j = 0; j < app.cols; j++) {
       grid[i][j].draw();
     }
   }

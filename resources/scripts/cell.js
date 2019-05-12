@@ -80,11 +80,11 @@ class Cell {
   floodfill() {
     for (var x = -1; x <= 1; x++) {
       var i = this.i + x;
-      if (i < 0 || i >= rows) continue;
+      if (i < 0 || i >= app.rows) continue;
 
       for (var y = -1; y <= 1; y++) {
         var j = this.j + y;
-        if (j < 0 || j >= cols) continue;
+        if (j < 0 || j >= app.cols) continue;
 
         var neighbor = grid[i][j];
 

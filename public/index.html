@@ -25,6 +25,9 @@
     <div id="timer">
       <div class="values">00:00:00</div>
     </div>
+	<button onclick="changeDifficulty(0)">Beginner</button>
+	<button onclick="changeDifficulty(1)">Novice</button>
+	<button onclick="changeDifficulty(2)">Expert</button>
     <div>
       <ul>
         <li v-for="user in users"> {{ user }}</li>
