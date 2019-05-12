@@ -1,41 +1,38 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Minesweeper</title>
 
-    <script type="application/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
-    <script type="application/javascript" src="scripts/script.js"></script>
-    <script type="application/javascript" src="scripts/cell.js"></script>
-    <script type="application/javascript" src="lib/easytimer/dist/easytimer.js"></script>
-    <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<script type="application/javascript">
-		var username = "|||USER|||";
-	</script>
-    <link rel="stylesheet" href ="css/style.css" />
-  </head>
+<head>
+  <title>Minesweeper</title>
 
-  <body onload="init()">
-    <div id="app">
-      <div id="overlay" onclick="removeOverlay()">
-        <div id="start_text">Click to Start</div>
-      </div>
-      <canvas
-        oncontextmenu="return false;"
-        id="canvas"
-        width="640"
-        height="480"
-      ></canvas>
-      <div id="timer">
-        <div class="values">00:00:00</div>
-      </div>
-      <div>
-        <ul>
-            <li v-for="user in users"> {{ user }}</li>
-        </ul>
-		<ol>
-			<li v-for="leader in leaderboard"> {{ leader.username }} {{ leader.time }}</li>
-		</ol>
+  <script type="application/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+  <script type="application/javascript" src="scripts/script.js"></script>
+  <script type="application/javascript" src="scripts/cell.js"></script>
+  <script type="application/javascript" src="lib/easytimer/dist/easytimer.js"></script>
+  <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script type="application/javascript">
+    var username = "|||USER|||";
+  </script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body onload="init()">
+  <div id="app">
+    <div id="overlay" onclick="removeOverlay()">
+      <div id="start_text">Click to Start</div>
     </div>
-  </body>
+    <canvas oncontextmenu="return false;" id="canvas" width="640" height="480"></canvas>
+    <div id="timer">
+      <div class="values">00:00:00</div>
+    </div>
+    <div>
+      <ul>
+        <li v-for="user in users"> {{ user }}</li>
+      </ul>
+      <ol>
+        <li v-for="leader in leaderboard"> {{ leader.username }} {{ leader.time }}</li>
+      </ol>
+    </div>
+</body>
+
 </html>
