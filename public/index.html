@@ -46,6 +46,7 @@
         <li v-for="leaderExpert in leaderboardExpert"> {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
       </ol>
       <div id="userModal" class="modal" v-if="showModal">
+        <div class="modal-content">
         <h1> {{ currentUserModal }} </h1>
         <table>
             <tr>
@@ -59,6 +60,7 @@
                 <td> {{ item.games_played }} </td>
             </tr>
         </table>
+        </div>
       </div>
 </div>
 </body>
