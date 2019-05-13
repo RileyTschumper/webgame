@@ -86,7 +86,7 @@ wss.on("connection", ws => {
 
     //send a list of all users currently online
     sendUsernameList();
-
+    updateClientsStats();
     //Send client the leaderboard on connection
     var message = { msg: "leaderboard", data: leaderboard_list }
     clients[client_id].send(JSON.stringify(message));
@@ -147,13 +147,15 @@ function updateClientsLeaderboard() {
 
 function updateClientsStats(){
     var id;
-    var leaderboardList = {
+    console.log("IN UPDATECLIENTSSTATS, stats_list:");
+    console.log(stats_list);
+    var statsList = {
         msg: "stats",
         data: stats_list
     };
     for (id in clients) {
         if (clients.hasOwnProperty(id)) {
-            clients[id].send(JSON.stringify(leaderboardList));
+            clients[id].send(JSON.stringify(statsList));
         }
     }
 }
@@ -395,6 +397,25 @@ app.post("/create", (req, res) => {
     }
 });
 
+function initialize(){
+    initializeLeaderboard();
+    initializeStats();
+}
+
+function initializeStats(){
+    db.all("SELECT * FROM stats", (err, rows) => {
+        //console.log(rows);
+        for (var i = 0; i < rows.length; i++) {
+            stats_list.push({
+                username: rows[i].username,
+                difficulty: rows[i].difficulty,
+                games_played: rows[i].games_played
+            });
+        }
+    });
+
+}
+
 //initialize the leaderboard when server is started
 function initializeLeaderboard() {
     db.all("SELECT * FROM leaderboard", (err, rows) => {
@@ -411,4 +432,4 @@ function initializeLeaderboard() {
     //console.log(leaderboard_list);
 }
 
-server.listen(port, "0.0.0.0", initializeLeaderboard());
+server.listen(port, "0.0.0.0", initialize());

@@ -16,6 +16,7 @@ function init() {
             difficultyValue: 0, //0=Beginner, 1=Novice, 2=Expert
             difficulty: "Beginner", //Beginner, Novice, or Expert
             users: [], //current users online
+            userStats: [],
             rows: 10,
             cols: 10,
             size: 30,
@@ -63,8 +64,14 @@ function init() {
             //app.leaderboard = message.data;
             console.log(message.data);
         }
-
+        else if (message.msg == "stats"){
+            updateStats(message.data);
+        }
     };
+}
+
+function updateStats(data){
+    console.log(data);
 }
 
 //Updates the view model with leadboard data
