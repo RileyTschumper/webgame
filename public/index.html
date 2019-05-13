@@ -36,20 +36,20 @@
             </ul>
             <h2> Beginner Leaderboard </h2>
             <ol>
-                <li v-for="leaderBeginner in leaderboardBeginner" @click="showModal(leaderBeginner.username)">
+                <li v-for="leaderBeginner in leaderboardBeginner" @click="showModalFunction(leaderBeginner.username)">
                     {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
             </ol>
             <h2> Novice Leaderboard </h2>
             <ol>
-                <li v-for="leaderNovice in leaderboardNovice" @click="showModal(leaderNovice.username)">
+                <li v-for="leaderNovice in leaderboardNovice" @click="showModalFunction(leaderNovice.username)">
                     {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
             </ol>
             <h2> Expert Leaderboard </h2>
             <ol>
-                <li v-for="leaderExpert in leaderboardExpert" @click="showModal(leaderExpert.username)">
+                <li v-for="leaderExpert in leaderboardExpert" @click="showModalFunction(leaderExpert.username)">
                     {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
             </ol>
-            <div id="userModal" class="modal" v-if="showModal">
+            <div id="userModal" class="modal">
                 <div class="modal-content">
                     <span onclick="closeModal()" class="close">&times;</span>
                     <h1> {{ currentUserModal }} </h1>

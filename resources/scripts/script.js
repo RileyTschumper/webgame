@@ -3,14 +3,15 @@ var grid; //2D array of Cell objects
 var timer; //Timer object
 var app; //Vue app
 var ws; //websocket
+var modal;
 
 function init() {
     app = new Vue({
         el: "#app",
         data: {
-            currentUserModal = "",
-            currentUserStatsModal = [],
-            showModal = false,
+            currentUserModal: "",
+            currentUserStatsModal: [],
+            showModal: false,
             leaderboard: [],
             //3 separate leaderboards
             leaderboardBeginner: [],
@@ -27,6 +28,8 @@ function init() {
             mines: 10
         }
     });
+    
+    modal = document.getElementById("userModal");
 
     //updates the html canvas size based on board size
     updateCanvas();
@@ -74,11 +77,23 @@ function init() {
     };
 }
 
-function showModal(username){
+function showModalFunction(username){
     console.log("this username was clicked: " + username);
     app.currentUserModal = username;
     app.currentUserStatsModal = app.userStats[username];
+    console.log("HIIII");
+    console.log(app.currentUserStatsModal);
     app.showModal = true;
+    openModal();
+}
+
+function openModal(){
+    modal = document.getElementById("userModal");
+    modal.style.display = "block";
+}
+
+function closeModal(){
+    modal.style.display = "none";
 }
 
 
