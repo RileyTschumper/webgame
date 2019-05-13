@@ -38,12 +38,14 @@ app.use(
 app.use(express.static(resource_dir));
 
 var clients = {};
+//array of [username, username, ...]
 var client_usernames = [];
 var client_id;
+//an array of {client_id: ___, username:___}
 var client_username = [];
 var leaderboard_list = [];
 var currUsername;
-
+var client_keys = [];
 function initializeLeaderboard(){
 	db.all("SELECT * FROM leaderboard", (err, rows) => {
 		console.log(rows);
@@ -58,9 +60,11 @@ function initializeLeaderboard(){
 //function connect(){
 //console.log("in connect");
 wss.on("connection", ws => {
-	client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
+	var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
 	console.log("New connection: " + client_id);
-	console.log(client_id);
+	console.log(client_id);	
+	var output = { [client_id]: ws}
+	client_keys.push(client_id);
 	clients[client_id] = ws;
 	addClient(client_id);
 
@@ -83,6 +87,7 @@ wss.on("connection", ws => {
 	console.log(leaderboard_list);
 	var message = {msg: "leaderboard", data: leaderboard_list}
 	clients[client_id].send(JSON.stringify(message));
+	console.log(clients);
 
 });
 
@@ -101,7 +106,11 @@ function sendLeaderboard(client_id, message){
 	message = JSON.parse(message);
 	var time = message.time;
 	var difficulty = message.difficulty;
-	var client_keys = Object.keys(clients);
+	//var client_keys = [];
+	//for(var i = 0; i < clientsArray.length; i++){
+		
+	//}
+	//var client_keys = Object.keys(clients);
 	console.log("Clients List: ");
 	console.log(client_keys);
 	console.log(client_usernames);
@@ -209,6 +218,7 @@ app.get("/home", (req, res) => {
 	res.send(index);
 	
   });
+	console.log("pushed username: " + req.session.username + " onto array");
 	client_usernames.push(req.session.username);
 	//console.log(clients);
 	//client_username.push({client_id: client_id, username: req.session.username});

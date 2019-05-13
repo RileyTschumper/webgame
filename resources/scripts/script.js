@@ -69,10 +69,10 @@ function updateLeaderboard(data){
 			console.log("Data[i]: " + data[i]);
 			app.leaderboardBeginner.push(data[i]);
 		}	
-		else if(data[i].difficulty == 1 && !app.leaderboardNovice.includes(data[i])){
+		else if(data[i].difficulty == 1 && !(app.leaderboardNovice.filter(e => e.username == data[i].username).length > 0)){
 			app.leaderboardNovice.push(data[i]);
 		}
-		else if(data[i].difficulty == 2 && !app.leaderboardExpert.includes(data[i])){
+		else if(data[i].difficulty == 2 && !(app.leaderboardExpert.filter(e => e.username == data[i].username).length > 0)){
 			app.leaderboardExpert.push(data[i]);
 		}
 	}
