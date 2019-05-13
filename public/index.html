@@ -2,67 +2,72 @@
 <html>
 
 <head>
-  <title>Minesweeper</title>
+    <title>Minesweeper</title>
 
-  <script type="application/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
-  <script type="application/javascript" src="scripts/script.js"></script>
-  <script type="application/javascript" src="scripts/cell.js"></script>
-  <script type="application/javascript" src="lib/easytimer/dist/easytimer.js"></script>
-  <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <script type="application/javascript">
-    var username = "|||USER|||";
-  </script>
-  <link rel="stylesheet" href="css/style.css" />
+    <script type="application/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <script type="application/javascript" src="scripts/script.js"></script>
+    <script type="application/javascript" src="scripts/cell.js"></script>
+    <script type="application/javascript" src="lib/easytimer/dist/easytimer.js"></script>
+    <script type="application/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script type="application/javascript">
+        var username = "|||USER|||";
+    </script>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body onload="init()">
-  <div id="app">
-    <div id="overlay" onclick="removeOverlay()">
-      <div id="start_text">Click to Start</div>
-    </div>
-    <canvas oncontextmenu="return false;" id="canvas" width="640" height="480"></canvas>
-    <div id="timer">
-      <div class="values">00:00:00</div>
-    </div>
-	<button onclick="changeDifficulty(0)">Beginner</button>
-	<button onclick="changeDifficulty(1)">Novice</button>
-	<button onclick="changeDifficulty(2)">Expert</button>
-    <div>
-	  <h2> Current Users Online </h2>
-      <ul>
-        <li v-for="user in users"> {{ user }}</li>
-      </ul>
-	  <h2> Beginner Leaderboard </h2>
-      <ol>
-        <li v-for="leaderBeginner in leaderboardBeginner" @click="showModal(leaderBeginner.username)"> {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
-      </ol>
-    	  <h2> Novice Leaderboard </h2>
-      <ol>
-        <li v-for="leaderNovice in leaderboardNovice"> {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
-      </ol>
-	  <h2> Expert Leaderboard </h2>
-      <ol>
-        <li v-for="leaderExpert in leaderboardExpert"> {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
-      </ol>
-      <div id="userModal" class="modal" v-if="showModal">
-        <div class="modal-content">
-        <h1> {{ currentUserModal }} </h1>
-        <table>
-            <tr>
-                <th>Difficulty</th>
-                <th>Best Time</th>
-                <th>Games Played</th>
-            </tr>
-            <tr v-for="item in currentUserStatsModal">
-                <td> {{ item.difficulty }} </td>
-                <td> {{ item.time }} </td>
-                <td> {{ item.games_played }} </td>
-            </tr>
-        </table>
+    <div id="app">
+        <div id="overlay" onclick="removeOverlay()">
+            <div id="start_text">Click to Start</div>
         </div>
-      </div>
-</div>
+        <canvas oncontextmenu="return false;" id="canvas" width="640" height="480"></canvas>
+        <div id="timer">
+            <div class="values">00:00:00</div>
+        </div>
+        <button onclick="changeDifficulty(0)">Beginner</button>
+        <button onclick="changeDifficulty(1)">Novice</button>
+        <button onclick="changeDifficulty(2)">Expert</button>
+        <div>
+            <h2> Current Users Online </h2>
+            <ul>
+                <li v-for="user in users"> {{ user }}</li>
+            </ul>
+            <h2> Beginner Leaderboard </h2>
+            <ol>
+                <li v-for="leaderBeginner in leaderboardBeginner" @click="showModal(leaderBeginner.username)">
+                    {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
+            </ol>
+            <h2> Novice Leaderboard </h2>
+            <ol>
+                <li v-for="leaderNovice in leaderboardNovice" @click="showModal(leaderNovice.username)">
+                    {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
+            </ol>
+            <h2> Expert Leaderboard </h2>
+            <ol>
+                <li v-for="leaderExpert in leaderboardExpert" @click="showModal(leaderExpert.username)">
+                    {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
+            </ol>
+            <div id="userModal" class="modal" v-if="showModal">
+                <div class="modal-content">
+                    <span onclick="closeModal()" class="close">&times;</span>
+                    <h1> {{ currentUserModal }} </h1>
+                    <table>
+                        <tr>
+                            <th>Difficulty</th>
+                            <th>Best Time</th>
+                            <th>Games Played</th>
+                        </tr>
+                        <tr v-for="item in currentUserStatsModal">
+                            <td> {{ item.difficulty }} </td>
+                            <td> {{ item.time }} </td>
+                            <td> {{ item.games_played }} </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
 </body>
 
 </html>
