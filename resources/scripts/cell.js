@@ -19,6 +19,7 @@ class Cell {
         //rect.graphics.endFill();
 
         stage.addChild(rect);
+
         if (this.shown) {
             if (this.mine) {
                 var circle = new createjs.Shape();
@@ -51,18 +52,9 @@ class Cell {
                 }
             }
         }
+        //Draws a red box for a flag
         else if (this.flag == true) {
-            console.log("in flag draw");
-            /*
-            var image = new Image();
-            image.src = "../images/flag.svg";
-            var bitmap = new createjs.Bitmap(image);
-            bitmap.x = this.x;
-            bitmap.y = this.y;
-            bitmap.scaleY = 280 / 200;
-            bitmap.scaleX = 140 / 100;
-            stage.addChild(bitmap);
-            */
+            //console.log("in flag draw");
             rect = new createjs.Shape();
             rect.graphics.beginFill("red");
             rect.graphics.beginStroke("black");
@@ -75,7 +67,7 @@ class Cell {
         this.shown = true;
         this.flag = false;
         if (this.neighbors == 0) {
-            console.log("neighbors is 0");
+            //console.log("neighbors is 0");
             this.floodfill();
         }
     }
@@ -110,14 +102,9 @@ class Cell {
                     if (i == 0 && j == 0) {
                         continue;
                     }
-                    if (
-                        i + x >= 0 &&
-                        i + x < grid.length &&
-                        j + y >= 0 &&
-                        j + y < grid[0].length
-                    ) {
-                        console.log("I: " + i);
-                        console.log("J: " + j);
+                    if (i + x >= 0 && i + x < grid.length && j + y >= 0 && j + y < grid[0].length) {
+                        //console.log("I: " + i);
+                        //console.log("J: " + j);
                         if (grid[i + x][j + y].mine) {
                             total++;
                         }

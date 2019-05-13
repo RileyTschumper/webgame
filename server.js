@@ -48,39 +48,19 @@ var client_usernames = [];
 var client_id;
 //an array of {client_id: ___, username:___}
 var client_username = [];
+//array of JSON objects {username: ___, difficulty: ___, time: ___}
 var leaderboard_list = [];
+//username of person who just logged in
 var currUsername;
+//an array of all client id's
 var client_keys = [];
 
-function initializeLeaderboard() {
-    db.all("SELECT * FROM leaderboard", (err, rows) => {
-        console.log(rows);
-        for (var i = 0; i < rows.length; i++) {
-            leaderboard_list.push({
-                username: rows[i].username,
-                difficulty: rows[i].difficulty,
-                time: rows[i].time
-            });
-        }
-    });
-    console.log("LEADERBOARD: ");
-    console.log(leaderboard_list);
-}
-
-//function connect(){
-//console.log("in connect");
 wss.on("connection", ws => {
     var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
     console.log("New connection: " + client_id);
-    console.log(client_id);
-    var output = {
-        [client_id]: ws
-    }
     client_keys.push(client_id);
     clients[client_id] = ws;
     addClient(client_id);
-
-    //console.log(clients);
 
     ws.on("message", message => {
         console.log("Message from " + client_id + ": " + message);
@@ -94,18 +74,16 @@ wss.on("connection", ws => {
         sendUsernameList();
     });
 
+    //send a list of all users currently online
     sendUsernameList();
-    console.log("LEADERBOARD BEFORE SEND: ");
-    console.log(leaderboard_list);
-    var message = {
-        msg: "leaderboard",
-        data: leaderboard_list
-    }
-    clients[client_id].send(JSON.stringify(message));
-    console.log(clients);
 
+    //Send client the leaderboard on connection
+    var message = { msg: "leaderboard", data: leaderboard_list }
+    clients[client_id].send(JSON.stringify(message));
 });
 
+//Sends all clients the leaderboard
+//Called in sendLeaderboard()
 function updateClientsLeaderboard() {
     var id;
     var leaderboardList = {
@@ -119,31 +97,33 @@ function updateClientsLeaderboard() {
     }
 }
 
+//Updates and sends leaderboard 
 function sendLeaderboard(client_id, message) {
     var username;
     message = JSON.parse(message);
     var time = message.time;
     var difficulty = message.difficulty;
-    //var client_keys = [];
-    //for(var i = 0; i < clientsArray.length; i++){
-
-    //}
-    //var client_keys = Object.keys(clients);
     console.log("Clients List: ");
     console.log(client_keys);
     console.log(client_usernames);
     console.log("Client id: ");
     console.log(client_id);
+
+    //Finds the corresponding username to the client_id
     for (var i = 0; i < client_keys.length; i++) {
         if (client_keys[i] == client_id) {
             username = client_usernames[i];
         }
     }
+
+    //If user has already added a time for a certain difficulty
     db.all("SELECT * FROM leaderboard WHERE username = ? AND difficulty = ?", [username, difficulty], (err, rows) => {
         if (err) {
             throw err;
         }
+        //If user has already added a time for a certain difficulty
         if (rows.length > 0) {
+            //If it is a new best time, update the database
             if (time < rows[0].time) {
                 db.run("UPDATE leaderboard SET time = ? WHERE username = ? AND difficulty = ?", [time, username, difficulty], (err) => {
                     if (err) {
@@ -158,8 +138,8 @@ function sendLeaderboard(client_id, message) {
                 }
                 updateClientsLeaderboard();
             }
-            //console.log(rows);
         }
+        //First time completing this difficulty, create a new entry
         else {
             db.run("INSERT INTO leaderboard(username, difficulty, time) VALUES(?,?,?)", [username, difficulty, time], (err) => {
                 if (err) {
@@ -178,6 +158,7 @@ function sendLeaderboard(client_id, message) {
 
 }
 
+/*
 function sendUsername(username) {
     if (!client_usernames.includes(username)) {
         client_usernames.push(username);
@@ -190,7 +171,10 @@ function sendUsername(username) {
     console.log(clients);
     clients[client_id].send(JSON.stringify(usernameString));
 }
+*/
 
+//When a client disconnects, remove them from client_username and client_usernames
+//Called in ws.on("close")
 function removeUser(client_id) {
     console.log("removing user with client_id: " + client_id);
     console.log(client_username);
@@ -211,12 +195,11 @@ function removeUser(client_id) {
     }
 }
 
+//Sends all clients a list of the username of all clients
+//Called in app.get("/home"), wss.on("connection") and ws.on("close")
 function sendUsernameList() {
     var id;
-    var usernameList = {
-        msg: "username_list",
-        data: client_usernames
-    };
+    var usernameList = { msg: "username_list", data: client_usernames };
     for (id in clients) {
         if (clients.hasOwnProperty(id)) {
             clients[id].send(JSON.stringify(usernameList));
@@ -224,125 +207,129 @@ function sendUsernameList() {
     }
 }
 
+//adds client_id and username as a JSON to client_username array
+//Called in wss.on("connection")
 function addClient(client_id) {
-    client_username.push({
-        client_id: client_id,
-        username: currUsername
-    });
-    console.log(client_id);
+    client_username.push({ client_id: client_id, username: currUsername });
+    //console.log(client_id);
 }
 
+//Route for default
 app.get("/", (req, res) => {
+    //Already logged in, send to /home route
     if (req.session.loggedin) {
         console.log("going home");
         res.redirect("/home");
     }
+    //send login page
     else {
         res.sendFile(path.join(public_dir, "login.html"));
     }
 });
 
+//Route for main index.html page
 app.get("/home", (req, res) => {
     if (req.session.loggedin) {
         fs.readFile(path.join(public_dir, "index.html"), "utf8", (err, data) => {
-            console.log(data);
+            //console.log(data);
             var index = data.replace("|||USER|||", req.session.username);
             res.send(index);
-
         });
-        console.log("pushed username: " + req.session.username + " onto array");
         client_usernames.push(req.session.username);
-        //console.log(clients);
-        //client_username.push({client_id: client_id, username: req.session.username});
         sendUsernameList();
         currUsername = req.session.username;
-        //addClient(req.session.username);
-        //console.log("clients: " + clients);
-        //var username = req.session.username;
-        //connect();
-        //console.log(username);
-        //sendUsername(username);
-        //sendUsernameList();
     }
+    //if not logged in, send to login page
     else {
         res.redirect("/");
     }
-    //res.end();
+
 });
 
-
+//Route for existing users to sign-in
 app.post("/auth", (req, res) => {
+    //parse data from form
     username = req.body.username;
     password = req.body.password;
     if (username != undefined && password != undefined) {
         hashedPassword = md5(password);
-        db.all(
-            "SELECT * FROM users WHERE username = ? AND password = ?",
-            [username, hashedPassword],
-            (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                if (rows.length > 0) {
-                    req.session.loggedin = true;
-                    req.session.username = username;
-                    res.redirect("/home");
-                }
-                else {
-                    res.send("Incorrect username and/or password");
-                    //res.end();
-                }
+        db.all("SELECT * FROM users WHERE username = ? AND password = ?", [username, hashedPassword], (err, rows) => {
+            if (err) {
+                throw err;
             }
-        );
+            //If it is found in database, log in successful
+            //redirect to /home route
+            if (rows.length > 0) {
+                req.session.loggedin = true;
+                req.session.username = username;
+                res.redirect("/home");
+            }
+            else {
+                res.send("Incorrect username and/or password");
+            }
+        });
     }
     else {
         res.send("Enter a username and password");
-        res.end();
     }
 });
 
+//Route to create a new account
 app.post("/create", (req, res) => {
+    //parses items from form
     username = req.body.username;
     password = req.body.password;
     password_confirm = req.body.password_confirm;
     avatar = req.body.avatar;
-    console.log(avatar);
+
+    //passwords don't match
     if (password != password_confirm) {
         res.send("Passwords do not match. Re-enter your password.");
         res.end();
     }
     else {
-        db.all(
-            "SELECT * FROM users WHERE username = ?",
-            [username],
-            (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                if (rows.length > 0) {
-                    res.send("Username is taken. Please select a new username");
-                    res.end();
-                }
-                else {
-                    hashedPassword = md5(password);
-                    console.log("Username: " + username);
-                    console.log("Password: " + password);
-                    db.run(
-                        "INSERT INTO users(username, password, avatar) VALUES(?, ?, ?)",
-                        [username, hashedPassword, avatar],
-                        err => {
-                            if (err) {
-                                throw err;
-                            }
-                            console.log("added " + username + " to database");
-                            req.session.loggedin = true;
-                            req.session.username = username;
-                            res.redirect("/home");
-                        }
-                    );
-                }
+        db.all("SELECT * FROM users WHERE username = ?", [username], (err, rows) => {
+            if (err) {
+                throw err;
             }
-        );
+            //Username is already present in the database, choose a new one
+            if (rows.length > 0) {
+                res.send("Username is taken. Please select a new username");
+                res.end();
+            }
+            //Add to users table
+            else {
+                hashedPassword = md5(password);
+                console.log("Username: " + username);
+                console.log("Password: " + hashedPassword);
+                db.run("INSERT INTO users(username, password, avatar) VALUES(?, ?, ?)", [username, hashedPassword, avatar], err => {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log("added " + username + " to database");
+                    req.session.loggedin = true;
+                    req.session.username = username;
+                    res.redirect("/home");
+                });
+            }
+        });
     }
 });
+
+//initialize the leaderboard when server is started
+function initializeLeaderboard() {
+    db.all("SELECT * FROM leaderboard", (err, rows) => {
+        //console.log(rows);
+        for (var i = 0; i < rows.length; i++) {
+            leaderboard_list.push({
+                username: rows[i].username,
+                difficulty: rows[i].difficulty,
+                time: rows[i].time
+            });
+        }
+    });
+    //console.log("LEADERBOARD: ");
+    //console.log(leaderboard_list);
+}
+
 server.listen(port, "0.0.0.0", initializeLeaderboard());

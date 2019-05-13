@@ -1,24 +1,21 @@
-var stage;
-var grid;
-//var rows = 10;
-//var cols = 10;
-//var size = 30;
-//var numMines = 10;
-var timer;
-var app;
-var ws;
+var stage; //createjs canvas
+var grid; //2D array of Cell objects
+var timer; //Timer object
+var app; //Vue app
+var ws; //websocket
 
 function init() {
     app = new Vue({
         el: "#app",
         data: {
+            //3 separate leaderboards
             leaderboardBeginner: [],
             leaderboardNovice: [],
             leaderboardExpert: [],
-            username: "",
-            difficultyValue: 0,
-            difficulty: "Beginner",
-            users: [],
+            username: "", //Current user's username
+            difficultyValue: 0, //0=Beginner, 1=Novice, 2=Expert
+            difficulty: "Beginner", //Beginner, Novice, or Expert
+            users: [], //current users online
             rows: 10,
             cols: 10,
             size: 30,
@@ -26,17 +23,22 @@ function init() {
         }
     });
 
+    //updates the html canvas size based on board size
     updateCanvas();
-    //new stage
+
+    //creates a new stage
     stage = new createjs.Stage("canvas");
 
     //creates minesweeper board
     createMinefield();
 
+    //adds listener on the stage
     addStageListener();
 
+    //updates stage
     stage.update();
 
+    //opens websocket
     var port = window.location.port || "80";
     ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
     ws.onopen = event => {
@@ -45,14 +47,17 @@ function init() {
     ws.onmessage = event => {
         //console.log(event.data);
         var message = JSON.parse(event.data);
+        //recieves username message from server
         if (message.msg === "username") {
             app.username = message.data;
             console.log(app.username);
         }
+        //recieves all active users from server
         else if (message.msg === "username_list") {
             app.users = message.data;
             console.log(app.users);
         }
+        //recieves leaderboard message from server
         else if (message.msg == "leaderboard") {
             updateLeaderboard(message.data);
             //app.leaderboard = message.data;
@@ -62,9 +67,11 @@ function init() {
     };
 }
 
+//Updates the view model with leadboard data
+//This is called in init(), when the websocket recieves a message
+//of type leaderboard
 function updateLeaderboard(data) {
     for (var i = 0; i < data.length; i++) {
-        //var message = {difficulty: data[i].difficulty, time: data[i].time, username: data[i].username};
         if (data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)) {
             console.log("pushed");
             console.log(app.leaderboardBeginner);
@@ -80,11 +87,14 @@ function updateLeaderboard(data) {
     }
 }
 
+//adds listener to the stage for left and right clicks
+//Called in init() after the stage is initialized
+//Called in changeDifficulty()
 function addStageListener() {
     //when the stage is clicked...
     stage.on("stagemousedown", function (e) {
-        console.log("event: ");
-        console.log(e.nativeEvent.button);
+        //console.log("event: ");
+        //console.log(e.nativeEvent.button);
         var x = e.stageX;
         var y = e.stageY;
         var i = Math.floor(x / app.size);
@@ -109,6 +119,7 @@ function addStageListener() {
             }
         }
 
+        //counts the number of currently correct flags
         var correctFlags = 0;
         for (var i = 0; i < app.rows; i++) {
             for (var j = 0; j < app.cols; j++) {
@@ -118,6 +129,7 @@ function addStageListener() {
             }
         }
 
+        //if all mines have flags, you win
         if (correctFlags == app.mines) {
             console.log("you win!");
             var secondsOnClock = timer.getTimeValues().seconds;
@@ -125,7 +137,7 @@ function addStageListener() {
             var hoursOnClock = timer.getTimeValues().hours;
             var totalTimeInSeconds = secondsOnClock + (minutesOnClock * 60) + (hoursOnClock * 60 * 60);
             sendTime(totalTimeInSeconds);
-            console.log(totalTimeInSeconds);
+            //console.log(totalTimeInSeconds);
         }
 
         stage.update();
@@ -133,11 +145,15 @@ function addStageListener() {
 
 }
 
+//Updates the html canvas to the correct size based on our gameboard
 function updateCanvas() {
     document.getElementById("canvas").setAttribute("width", app.rows * app.size);
     document.getElementById("canvas").setAttribute("height", app.cols * app.size);
 }
 
+//Changes the difficulty of the game, by resizing and adding more mines
+//Resarts the game and updates the canvas accordingly
+//Called by 3 html buttons (Beginner, Novice, Expert)
 function changeDifficulty(diff) {
     if (diff == 0) {
         app.difficulty = "Beginner";
@@ -160,14 +176,19 @@ function changeDifficulty(diff) {
         app.cols = 15;
         app.mines = 30;
     }
+
+    //
     updateCanvas();
     createMinefield();
     addStageListener();
     stage.update();
+
     //add overlay
     addOverlay();
 }
 
+//Sends a message to the server with the time if the user won
+//Called in addStageListener() when all flags are correct
 function sendTime(time) {
     message = {
         difficulty: app.difficultyValue,
@@ -176,7 +197,10 @@ function sendTime(time) {
     ws.send(JSON.stringify(message));
 }
 
+//Creates a minefield
+//Called in init() and changeDifficulty()
 function createMinefield() {
+    //Makes 2D array and fills it will Cell objects
     grid = make2DArray(app.rows, app.cols);
     for (var i = 0; i < app.rows; i++) {
         for (var j = 0; j < app.cols; j++) {
@@ -198,6 +222,7 @@ function createMinefield() {
         }
     }
 
+    //adds values to the number of neighbor mines
     for (var i = 0; i < app.rows; i++) {
         for (var j = 0; j < app.cols; j++) {
             grid[i][j].countNeighbors(grid, i, j);
@@ -212,9 +237,12 @@ function createMinefield() {
     }
 }
 
+//Removes overlay and starts the timer
+//Called onclick by html element
 function removeOverlay() {
     document.getElementById("overlay").style.display = "none";
 
+    //creates a new timer object
     timer = new easytimer.Timer();
     timer.start();
     timer.addEventListener("secondsUpdated", function (e) {
@@ -222,11 +250,15 @@ function removeOverlay() {
     });
 }
 
+//Adds overlay and stops the timer
 function addOverlay() {
     timer.stop();
     document.getElementById("overlay").style.display = "block";
 }
 
+//A sequence of events when you click a mine
+//Shows the full board
+//Called in addStageListener()
 function gameOver() {
     //show full board
     for (var i = 0; i < app.rows; i++) {
@@ -234,7 +266,7 @@ function gameOver() {
             grid[i][j].shown = true;
         }
     }
-
+    //draw all squares (since they are all shown now)
     for (var i = 0; i < app.rows; i++) {
         for (var j = 0; j < app.cols; j++) {
             grid[i][j].draw();
@@ -242,13 +274,15 @@ function gameOver() {
     }
 
     timer.stop();
+    stage.update();
+
     //reset board
     //createMinefield();
-
     //add overlay
     //addOverlay();
 }
 
+//Helper function to create a 2D array
 function make2DArray(rows, cols) {
     var arr = new Array(rows);
     for (var i = 0; i < arr.length; i++) {
