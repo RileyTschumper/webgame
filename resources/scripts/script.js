@@ -80,7 +80,11 @@ function init() {
 function showModalFunction(username){
     console.log("this username was clicked: " + username);
     app.currentUserModal = username;
-    app.currentUserStatsModal = app.userStats[username];
+    for(var i = 0; i < app.userStats.length; i++){
+        if(username == app.userStats[i].username){
+            app.currentUserStatsModal = app.userStats[i].data;
+        }
+    }
     console.log("HIIII");
     console.log(app.currentUserStatsModal);
     app.showModal = true;
