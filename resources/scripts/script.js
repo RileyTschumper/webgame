@@ -8,6 +8,10 @@ function init() {
     app = new Vue({
         el: "#app",
         data: {
+            currentUserModal = "",
+            currentUserStatsModal = [],
+            showModal = false,
+            leaderboard: [],
             //3 separate leaderboards
             leaderboardBeginner: [],
             leaderboardNovice: [],
@@ -70,8 +74,36 @@ function init() {
     };
 }
 
+function showModal(username){
+    console.log("this username was clicked: " + username);
+    app.currentUserModal = username;
+    app.currentUserStatsModal = app.userStats[username];
+    app.showModal = true;
+}
+
+
 function updateStats(data){
-    console.log(data);
+    var i;
+    for(i = 0; i < data.length; i = i+3){
+        var userJSON = {username: data[i].username, data: []};
+        for(var j = i; j < (i+3); j++){
+            var userData;
+            var updatedTime = false;
+            for(var z = 0; z < app.leaderboard.length; z++){
+                if(app.leaderboard[z].difficulty == data[j].difficulty && app.leaderboard[z].username == data[j].username){
+                    userData = {difficulty: data[j].difficulty, time: app.leaderboard[z].time, games_played: data[j].games_played};
+                    updatedTime = true;
+                }
+            }
+            if(updatedTime == false){
+                userData = {difficulty: data[j].difficulty, time: "N/A", games_played: data[j].games_played};
+            }
+            userJSON.data.push(userData);
+        }
+        app.userStats.push(userJSON);
+    }
+    console.log("userStats: ");
+    console.log(app.userStats);
 }
 
 //Updates the view model with leadboard data
@@ -79,6 +111,7 @@ function updateStats(data){
 //of type leaderboard
 function updateLeaderboard(data) {
     for (var i = 0; i < data.length; i++) {
+        app.leaderboard.push(data[i]);
         if (data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)) {
             console.log("pushed");
             console.log(app.leaderboardBeginner);
@@ -92,6 +125,8 @@ function updateLeaderboard(data) {
             app.leaderboardExpert.push(data[i]);
         }
     }
+    console.log("leaderboard: ");
+    console.log(app.leaderboard);
 }
 
 //adds listener to the stage for left and right clicks

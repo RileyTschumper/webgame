@@ -35,7 +35,7 @@
       </ul>
 	  <h2> Beginner Leaderboard </h2>
       <ol>
-        <li v-for="leaderBeginner in leaderboardBeginner"> {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
+        <li v-for="leaderBeginner in leaderboardBeginner" @click="showModal(leaderBeginner.username)"> {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
       </ol>
     	  <h2> Novice Leaderboard </h2>
       <ol>
@@ -45,6 +45,21 @@
       <ol>
         <li v-for="leaderExpert in leaderboardExpert"> {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
       </ol>
+      <div id="userModal" class="modal" v-if="showModal">
+        <h1> {{ currentUserModal }} </h1>
+        <table>
+            <tr>
+                <th>Difficulty</th>
+                <th>Best Time</th>
+                <th>Games Played</th>
+            </tr>
+            <tr v-for="item in currentUserStatsModal">
+                <td> {{ item.difficulty }} </td>
+                <td> {{ item.time }} </td>
+                <td> {{ item.games_played }} </td>
+            </tr>
+        </table>
+      </div>
 </div>
 </body>
 

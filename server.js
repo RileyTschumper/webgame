@@ -86,10 +86,10 @@ wss.on("connection", ws => {
 
     //send a list of all users currently online
     sendUsernameList();
-    updateClientsStats();
     //Send client the leaderboard on connection
     var message = { msg: "leaderboard", data: leaderboard_list }
     clients[client_id].send(JSON.stringify(message));
+    updateClientsStats();
 });
 
 function addGamePlayed(client_id, message){
