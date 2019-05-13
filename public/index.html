@@ -29,13 +29,23 @@
 	<button onclick="changeDifficulty(1)">Novice</button>
 	<button onclick="changeDifficulty(2)">Expert</button>
     <div>
+	  <h2> Current Users Online </h2>
       <ul>
         <li v-for="user in users"> {{ user }}</li>
       </ul>
+	  <h2> Beginner Leaderboard </h2>
       <ol>
-        <li v-for="leader in leaderboard"> {{ leader.username }} {{ leader.time }}</li>
+        <li v-for="leaderBeginner in leaderboardBeginner"> {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
       </ol>
-    </div>
+    	  <h2> Novice Leaderboard </h2>
+      <ol>
+        <li v-for="leaderNovice in leaderboardNovice"> {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
+      </ol>
+	  <h2> Expert Leaderboard </h2>
+      <ol>
+        <li v-for="leaderExpert in leaderboardExpert"> {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
+      </ol>
+</div>
 </body>
 
 </html>

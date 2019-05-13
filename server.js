@@ -42,12 +42,13 @@ var client_usernames = [];
 var client_id;
 var client_username = [];
 var leaderboard_list = [];
+var currUsername;
 
 function initializeLeaderboard(){
 	db.all("SELECT * FROM leaderboard", (err, rows) => {
 		console.log(rows);
 		for(var i = 0; i < rows.length; i++){
-			leaderboard_list.push({username: rows[i].uname, time: rows[i].time});
+			leaderboard_list.push({username: rows[i].username, difficulty: rows[i].difficulty, time: rows[i].time});
 		} 
 	});
 	console.log("LEADERBOARD: ");
@@ -61,6 +62,7 @@ wss.on("connection", ws => {
 	console.log("New connection: " + client_id);
 	console.log(client_id);
 	clients[client_id] = ws;
+	addClient(client_id);
 
 	//console.log(clients);
 
@@ -72,6 +74,8 @@ wss.on("connection", ws => {
 	ws.on("close", () => {
 		console.log("Client disconnected: " + client_id);
 		delete clients[client_id];
+		removeUser(client_id);
+		sendUsernameList();
 	});
 	
 	sendUsernameList();
@@ -94,7 +98,9 @@ function updateClientsLeaderboard(){
 
 function sendLeaderboard(client_id, message){
 	var username;
-	var time = parseInt(message);
+	message = JSON.parse(message);
+	var time = message.time;
+	var difficulty = message.difficulty;
 	var client_keys = Object.keys(clients);
 	console.log("Clients List: ");
 	console.log(client_keys);
@@ -106,20 +112,20 @@ function sendLeaderboard(client_id, message){
 			username = client_usernames[i];
 		}
 	}
-	db.all("SELECT * FROM leaderboard WHERE uname = ?", [username], (err, rows) => {
+	db.all("SELECT * FROM leaderboard WHERE username = ? AND difficulty = ?", [username, difficulty], (err, rows) => {
         if (err) {
           throw err;
         }
         if (rows.length > 0) {
           	if(time < rows[0].time){
-				db.run("UPDATE leaderboard SET time = ? WHERE uname = ?", [time, username], (err) => {
+				db.run("UPDATE leaderboard SET time = ? WHERE username = ? AND difficulty = ?", [time, username, difficulty], (err) => {
 					if(err){
 						throw err;
 					}
-					console.log("Updated leaderboard time for: " + username + " with a time of: " + time);
+				    console.log("added " + username + " with a difficulty of " + difficulty + " time of " + time + " into the leaderboard");
 				});
-				for(user in leadboard_list){
-					if(username == user.username){
+				for(user in leaderboard_list){
+					if(username == user.username && difficulty == user.difficulty){
 						user.time = time;
 					}
 				}
@@ -127,29 +133,14 @@ function sendLeaderboard(client_id, message){
 			}
 			//console.log(rows);
         } 
-		/*
-          db.run(
-            "INSERT INTO users(username, password) VALUES(?, ?)",
-            [username, hashedPassword],
-            err => {
-              if (err) {
-                throw err;
-              }
-              console.log("added " + username + " to database");
-              req.session.loggedin = true;
-              req.session.username = username;
-              res.redirect("/home");
-            }
-          );
-			*/
 		else{
-			db.run("INSERT INTO leaderboard(uname, time) VALUES(?,?)", [username, time], (err) =>{
+			db.run("INSERT INTO leaderboard(username, difficulty, time) VALUES(?,?,?)", [username, difficulty, time], (err) =>{
 				if(err){
 					throw err;
 				}
-				console.log("added " + username + " with a time of " + time + " into the leaderboard");
+				console.log("added " + username + " with a difficulty of " + difficulty + " time of " + time + " into the leaderboard");
 			});
-			leadboard_list.push({username: username, time: time});
+			leaderboard_list.push({username: username, difficulty: difficulty, time: time});
 			updateClientsLeaderboard();
 		}
 	});
@@ -166,6 +157,26 @@ function sendUsername(username){
 	clients[client_id].send(JSON.stringify(usernameString));
 }
 
+function removeUser(client_id){
+	console.log("removing user with client_id: " + client_id);
+	console.log(client_username);
+	var username;
+	var i;
+	for(i = 0; i < client_username.length; i++){
+		if(client_username[i].client_id == client_id){
+			username = client_username[i].username;
+			client_username.splice(i,1);
+			console.log("found username for client");
+		}
+	}
+	for(i = 0; i < client_usernames.length; i++){
+		if(client_usernames[i] == username){
+			console.log("removed username from list");
+			client_usernames.splice(i,1);
+		}
+	}
+}
+
 function sendUsernameList(){
 	var id;
 	var usernameList = { msg: "username_list", data: client_usernames };
@@ -176,8 +187,8 @@ function sendUsernameList(){
 	}
 }
 
-function addClient(username){
-	client_username.push({client_id: client_id, username: username});
+function addClient(client_id){
+	client_username.push({client_id: client_id, username: currUsername});
 	console.log(client_id);
 }
 
@@ -202,6 +213,7 @@ app.get("/home", (req, res) => {
 	//console.log(clients);
 	//client_username.push({client_id: client_id, username: req.session.username});
 	sendUsernameList();
+	currUsername = req.session.username;
 	//addClient(req.session.username);
 	//console.log("clients: " + clients);
 	//var username = req.session.username;
@@ -210,7 +222,7 @@ app.get("/home", (req, res) => {
 	//sendUsername(username);
 	//sendUsernameList();
  } else {
-    res.send("Please login to view this page!");
+    res.redirect("/");
   }
   //res.end();
 });
@@ -269,8 +281,8 @@ app.post("/create", (req, res) => {
           console.log("Username: " + username);
           console.log("Password: " + password);
           db.run(
-            "INSERT INTO users(username, password) VALUES(?, ?)",
-            [username, hashedPassword],
+            "INSERT INTO users(username, password, avatar) VALUES(?, ?, ?)",
+            [username, hashedPassword, avatar],
             err => {
               if (err) {
                 throw err;

@@ -12,7 +12,9 @@ function init() {
   app = new Vue({
     el: "#app",
     data: {
-      leaderboard: [],
+      leaderboardBeginner: [],
+	  leaderboardNovice: [],
+	  leaderboardExpert: [],
       username: "",
       difficultyValue: 0,
 	  difficulty: "Beginner",
@@ -50,11 +52,30 @@ function init() {
       app.users = message.data;
       console.log(app.users);
 	} else if (message.msg == "leaderboard"){
-	  app.leaderboard = message.data;
-	  console.log(app.leaderboard);
+	  updateLeaderboard(message.data);
+	  //app.leaderboard = message.data;
+	  console.log(message.data);
 	}    
 
   };
+}
+
+function updateLeaderboard(data){
+	for(var i = 0; i < data.length; i++){
+		//var message = {difficulty: data[i].difficulty, time: data[i].time, username: data[i].username};
+		if(data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)){
+			console.log("pushed");
+			console.log(app.leaderboardBeginner);
+			console.log("Data[i]: " + data[i]);
+			app.leaderboardBeginner.push(data[i]);
+		}	
+		else if(data[i].difficulty == 1 && !app.leaderboardNovice.includes(data[i])){
+			app.leaderboardNovice.push(data[i]);
+		}
+		else if(data[i].difficulty == 2 && !app.leaderboardExpert.includes(data[i])){
+			app.leaderboardExpert.push(data[i]);
+		}
+	}
 }
 
 function addStageListener(){
@@ -125,15 +146,15 @@ function changeDifficulty(diff){
 	else if(diff == 1){
 		app.difficulty = "Novice";
 		app.difficultyValue = 1;
-		app.rows = 15;
-		app.cols = 15;
+		app.rows = 13;
+		app.cols = 13;
 		app.mines = 20;
 	}
 	else if(diff == 2){
 		app.difficulty = "Expert";
 		app.difficultyValue = 2;
-		app.rows = 20;
-		app.cols = 20;
+		app.rows = 15;
+		app.cols = 15;
 		app.mines = 30;
 	}	
 	updateCanvas();
@@ -145,7 +166,8 @@ function changeDifficulty(diff){
 }
 
 function sendTime(time){
-	ws.send(time);
+	message = {difficulty: app.difficultyValue, time: time};
+	ws.send(JSON.stringify(message));
 }
 
 function createMinefield() {
@@ -212,12 +234,13 @@ function gameOver() {
       grid[i][j].draw();
     }
   }
-
+  
+  timer.stop();
   //reset board
-  createMinefield();
+  //createMinefield();
 
   //add overlay
-  addOverlay();
+  //addOverlay();
 }
 
 function make2DArray(rows, cols) {
