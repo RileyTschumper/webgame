@@ -137,6 +137,7 @@ function addStageListener() {
             var hoursOnClock = timer.getTimeValues().hours;
             var totalTimeInSeconds = secondsOnClock + (minutesOnClock * 60) + (hoursOnClock * 60 * 60);
             sendTime(totalTimeInSeconds);
+            incrementGamesPlayed();
             //console.log(totalTimeInSeconds);
         }
 
@@ -185,6 +186,14 @@ function changeDifficulty(diff) {
 
     //add overlay
     addOverlay();
+}
+
+function incrementGamesPlayed(){
+    message = {
+        difficulty: app.difficultyValue,
+        time: "gamesPlayed"
+    };
+    ws.send(JSON.stringify(message));
 }
 
 //Sends a message to the server with the time if the user won
@@ -272,7 +281,7 @@ function gameOver() {
             grid[i][j].draw();
         }
     }
-
+    incrementGamesPlayed();
     timer.stop();
     stage.update();
 

@@ -54,6 +54,7 @@ var leaderboard_list = [];
 var currUsername;
 //an array of all client id's
 var client_keys = [];
+var stats_list = [];
 
 wss.on("connection", ws => {
     var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
@@ -64,8 +65,17 @@ wss.on("connection", ws => {
 
     ws.on("message", message => {
         console.log("Message from " + client_id + ": " + message);
-        console.log(client_username);
-        sendLeaderboard(client_id, message);
+        var parsedMessage = JSON.parse(message);
+        
+        //update number of games played
+        if(parsedMessage.time == "gamesPlayed"){
+            addGamePlayed(client_id, parsedMessage);
+            updateClientsStats();
+        }
+        //console.log(client_username);
+        else{
+            sendLeaderboard(client_id, message);
+        }
     });
     ws.on("close", () => {
         console.log("Client disconnected: " + client_id);
@@ -82,6 +92,43 @@ wss.on("connection", ws => {
     clients[client_id].send(JSON.stringify(message));
 });
 
+function addGamePlayed(client_id, message){
+    console.log("in the addGamePlayed");
+    var username;
+    var difficulty = message.difficulty;
+    var gamesPlayed;
+    //Finds the corresponding username to the client_id
+    for (var i = 0; i < client_keys.length; i++) {
+        if (client_keys[i] == client_id) {
+            username = client_usernames[i];
+        }
+    }   
+    console.log("username: " + username);
+    db.all("SELECT * FROM stats WHERE username = ? AND difficulty = ?", [username, difficulty], (err, rows) => {
+        if (err) {
+            throw err;
+        }
+        console.log("found in database");
+        console.log(rows);
+        gamesPlayed = rows[0].games_played;
+        gamesPlayed++;
+        console.log("gamesPlayed after increment: " + gamesPlayed);
+        db.run("UPDATE stats SET games_played = ? WHERE username = ? AND difficulty = ?", [gamesPlayed, username, difficulty], (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+        for(user in stats_list){
+            if(username == user.username && difficulty == user.difficulty){
+                user.games_played = gamesPlayed;
+            }
+        }
+    });
+    //console.log("gamesPlayed before update: " + gamesPlayed);
+
+
+}
+
 //Sends all clients the leaderboard
 //Called in sendLeaderboard()
 function updateClientsLeaderboard() {
@@ -89,6 +136,20 @@ function updateClientsLeaderboard() {
     var leaderboardList = {
         msg: "leaderboard",
         data: leaderboard_list
+    };
+    for (id in clients) {
+        if (clients.hasOwnProperty(id)) {
+            clients[id].send(JSON.stringify(leaderboardList));
+        }
+    }
+
+}
+
+function updateClientsStats(){
+    var id;
+    var leaderboardList = {
+        msg: "stats",
+        data: stats_list
     };
     for (id in clients) {
         if (clients.hasOwnProperty(id)) {
@@ -302,6 +363,24 @@ app.post("/create", (req, res) => {
                 hashedPassword = md5(password);
                 console.log("Username: " + username);
                 console.log("Password: " + hashedPassword);
+                db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 0, 0], err => {
+                    if(err) {
+                        throw err;
+                    }
+                });
+                stats_list.push({ username: username, difficulty: 0, games_played: 0}); 
+                db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 1, 0], err => {
+                    if(err) {
+                        throw err;
+                    }
+                });
+                stats_list.push({ username: username, difficulty: 1, games_played: 0});
+                 db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 2, 0], err => {
+                    if(err) {
+                        throw err;
+                    }
+                });
+                stats_list.push({ username: username, difficulty: 2, games_played: 0});
                 db.run("INSERT INTO users(username, password, avatar) VALUES(?, ?, ?)", [username, hashedPassword, avatar], err => {
                     if (err) {
                         throw err;
