@@ -25,59 +25,68 @@
         <div id="overlay" onclick="removeOverlay()">
             <div id="start_text">Click to Start</div>
         </div>
-        <div class="col-sm-8">
-            <canvas oncontextmenu="return false;" id="canvas" width="640" height="480"></canvas>
-            <div id="timer">
-                <div class="values">00:00:00</div>
+        <div class="row">
+            <div class="col-sm-8" style="display: flex; justify-content: center; align-items: center;">
+                <div>
+                    <canvas oncontextmenu="return false;" id="canvas" width="640" height="480"></canvas>
+                
+                    <div id="timer" align="center">
+                        <div class="values">00:00:00</div>
+                    </div>
+                    <div align="center">
+                        <button onclick="changeDifficulty(0)">Beginner</button>
+                        <button onclick="changeDifficulty(1)">Novice</button>
+                        <button onclick="changeDifficulty(2)">Expert</button>
+                    </div>
+                </div>
             </div>
-            <button onclick="changeDifficulty(0)">Beginner</button>
-            <button onclick="changeDifficulty(1)">Novice</button>
-            <button onclick="changeDifficulty(2)">Expert</button>
-        </div>
-        <div class="col-sm-4">
-            <h2> Current Users Online </h2>
-            <ul>
-                <li v-for="user in users"> {{ user }}</li>
-            </ul>
-            <h2> Beginner Leaderboard </h2>
-            <ol>
-                <li v-for="leaderBeginner in leaderboardBeginner" @click="showModalFunction(leaderBeginner.username)">
-                    {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
-            </ol>
-            <h2> Novice Leaderboard </h2>
-            <ol>
-                <li v-for="leaderNovice in leaderboardNovice" @click="showModalFunction(leaderNovice.username)">
-                    {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
-            </ol>
-            <h2> Expert Leaderboard </h2>
-            <ol>
-                <li v-for="leaderExpert in leaderboardExpert" @click="showModalFunction(leaderExpert.username)">
-                    {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
-            </ol>
-            <div id="userModal" class="modal">
-                <div class="modal-content">
-                    <span onclick="closeModal()" class="close">&times;</span>
-                    <h1> {{ currentUserModal }} </h1>
-                    <table>
-                        <tr>
-                            <th>Difficulty</th>
-                            <th>Best Time</th>
-                            <th>Games Played</th>
-                        </tr>
-                        <tr v-for="item in currentUserStatsModal">
-                            <td> {{ item.difficulty }} </td>
-                            <td> {{ item.time }} </td>
-                            <td> {{ item.games_played }} </td>
-                        </tr>
-                    </table>
+            <div class="col-sm-4 mx-auto">
+                <h2> Current Users Online </h2>
+                <ul>
+                    <li v-for="user in users"> {{ user }}</li>
+                </ul>
+                <h2> Beginner Leaderboard </h2>
+                <ol>
+                    <li v-for="leaderBeginner in leaderboardBeginner" @click="showModalFunction(leaderBeginner.username)">
+                        {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
+                </ol>
+                <h2> Novice Leaderboard </h2>
+                <ol>
+                    <li v-for="leaderNovice in leaderboardNovice" @click="showModalFunction(leaderNovice.username)">
+                        {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
+                </ol>
+                <h2> Expert Leaderboard </h2>
+                <ol>
+                    <li v-for="leaderExpert in leaderboardExpert" @click="showModalFunction(leaderExpert.username)">
+                        {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
+                </ol>
+                <div id="userModal" class="modal">
+                    <div class="modal-content">
+                        <span onclick="closeModal()" class="close">&times;</span>
+                        <h1> {{ currentUserModal }} </h1>
+                        <table>
+                            <tr>
+                                <th>Difficulty</th>
+                                <th>Best Time</th>
+                                <th>Games Played</th>
+                            </tr>
+                            <tr v-for="item in currentUserStatsModal">
+                                <td> {{ item.difficulty }} </td>
+                                <td> {{ item.time }} </td>
+                                <td> {{ item.games_played }} </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <h4>Chat Rooms</h4>
-        <div  v-for="groups in chatGroups">
+        <h4 align="center">Chat Rooms</h4>
+        <div class="row justify-content-md-center">
+        <div class="col-md-auto" v-for="groups in chatGroups">
             <h5>Group: <span >{{ groups }}</span></h5>
             <!-- a hardcoded group name -->
             <button @click="bjoin(groups)">Join {{ groups }}</button><br>
+        </div>
         </div>
         <div v-if="showChat">
             <input v-bind:id="currentGroup" type="text" />
