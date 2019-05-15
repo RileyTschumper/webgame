@@ -109,6 +109,8 @@ function bjoin(group){
 
 function sendMessage(){
     var chatMessage = document.getElementById(app.currentGroup).value;
+    console.log("chatMessage: " + chatMessage);
+    console.log("currentGroup: " + app.currentGroup);
     broadcast(chatMessage,app.currentGroup);
 }
 
