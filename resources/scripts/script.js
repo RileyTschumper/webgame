@@ -191,6 +191,15 @@ function updateLeaderboard(data) {
             app.leaderboardExpert.push(data[i]);
         }
     }
+    app.leaderboardBeginner.sort(function(a,b) {
+        return a.time - b.time;
+    });
+    app.leaderboardNovice.sort(function(a,b) {
+        return a.time - b.time;
+    });
+    app.leaderboardExpert.sort(function(a,b) {
+        return a.time - b.time;
+    });
     console.log("leaderboard: ");
     console.log(app.leaderboard);
 }
