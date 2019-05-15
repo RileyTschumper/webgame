@@ -105,6 +105,7 @@ function join(room) {
     ws.send(JSON.stringify({ join: room }));
 }
 
+/*
 function bjoin(group) {
     //alert(group);
     //var group = document.getElementById("group").textContent;
@@ -113,6 +114,15 @@ function bjoin(group) {
     app.chats = [];
     join(group);
 
+}
+*/
+
+function bjoin(){
+    var group = document.getElementById("group").value;
+    app.currentGroup = group;
+    app.showChat = true;
+    app.chats = [];
+    join(group);
 }
 
 function sendMessage() {
