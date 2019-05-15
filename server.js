@@ -105,9 +105,11 @@ wss.on("connection", ws => {
 });
 
 function broadcast(message){
+    var parsedMessage = JSON.parse(message);
+    var messageToSend = {msg: "chat", data: parsedMessage.msg}
     wss.clients.forEach(client=>{
         if(client.room.indexOf(JSON.parse(message).room)>-1){
-            client.send(message)
+            client.send(JSON.stringify(messageToSend))
         }
     });
 }
