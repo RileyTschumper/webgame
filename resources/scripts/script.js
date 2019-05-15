@@ -91,6 +91,7 @@ function send(msg){
 }
 
 function broadcast(msg,room){
+    console.log("In broadcast, room: " + room);
     ws.send(JSON.stringify({room:room,msg:msg}))
  }
 
@@ -111,7 +112,7 @@ function sendMessage(){
     var chatMessage = document.getElementById(app.currentGroup).value;
     console.log("chatMessage: " + chatMessage);
     console.log("currentGroup: " + app.currentGroup);
-    broadcast(chatMessage,app.currentGroup);
+    broadcast(chatMessage, app.currentGroup);
 }
 
 /*
