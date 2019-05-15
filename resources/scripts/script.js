@@ -13,6 +13,10 @@ function init() {
             currentUserStatsModal: [],
             showModal: false,
             leaderboard: [],
+            chats: [],
+            chatGroups: ["Beginner", "Novice", "Expert"],
+            currentGroup: "",
+            showChat: false,
             //3 separate leaderboards
             leaderboardBeginner: [],
             leaderboardNovice: [],
@@ -74,8 +78,46 @@ function init() {
         else if (message.msg == "stats"){
             updateStats(message.data);
         }
+        else if(message.msg == "chat"){
+            app.chats.push(message.data);
+        }
     };
 }
+
+//var group = document.getElementById("group").textContent;
+
+function send(msg){
+    ws.send(JSON.stringify({msg:msg}));
+}
+
+function broadcast(msg,room){
+    ws.send(JSON.stringify({room:room,msg:msg}))
+ }
+
+function join(room){
+    ws.send(JSON.stringify({join:room}));
+}
+
+function bjoin(group){
+    //alert(group);
+    //var group = document.getElementById("group").textContent;
+    app.currentGroup = group;
+    app.showChat = true;
+    join(group);
+
+}
+
+function sendMessage(){
+    var chatMessage = document.getElementById(app.currentGroup).value;
+    broadcast(chatMessage,app.currentGroup);
+}
+
+/*
+text.onchange=function(el){
+    //alert(el.target.value);
+    var groups = document.getElementById("groups").textContent;  
+}
+*/
 
 function showModalFunction(username){
     console.log("this username was clicked: " + username);

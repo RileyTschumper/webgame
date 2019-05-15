@@ -63,9 +63,21 @@ wss.on("connection", ws => {
     clients[client_id] = ws;
     addClient(client_id);
 
+    ws.room=[];
+
     ws.on("message", message => {
         console.log("Message from " + client_id + ": " + message);
         var parsedMessage = JSON.parse(message);
+
+        if(parsedMessage.join){
+            ws.room.push(parsedMessage.join);
+        }
+        if(parsedMessage.room){
+            broadcast(message);
+        }
+        if(parsedMessage.msg){
+            console.log('message: ', parsedMessage.msg);
+        }
         
         //update number of games played
         if(parsedMessage.time == "gamesPlayed"){
@@ -91,6 +103,14 @@ wss.on("connection", ws => {
     clients[client_id].send(JSON.stringify(message));
     updateClientsStats();
 });
+
+function broadcast(message){
+    wss.clients.forEach(client=>{
+        if(client.room.indexOf(JSON.parse(message).room)>-1){
+            client.send(message)
+        }
+    });
+}
 
 function addGamePlayed(client_id, message){
     console.log("in the addGamePlayed");

@@ -67,6 +67,19 @@
                     </table>
                 </div>
             </div>
+            <h4>websocket</h4>
+            <div  v-for="groups in chatGroups">
+                <h5>Group: <span >{{ groups }}</span></h5>
+                <!-- a hardcoded group name -->
+                <button @click="bjoin(groups)">Join {{ groups }}</button><br>
+            </div>
+            <div v-if="showChat">
+                <input v-bind:id="currentGroup" type="text" />
+                <button onclick="sendMessage()"> </button>
+                <ol v-for="messsages in chats">
+                    <li> {{ messages }}</li>
+                </ol>
+            </div>
         </div>
 </body>
 
