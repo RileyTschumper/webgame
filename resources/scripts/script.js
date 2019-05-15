@@ -32,7 +32,7 @@ function init() {
             mines: 10
         }
     });
-    
+
     modal = document.getElementById("userModal");
 
     //updates the html canvas size based on board size
@@ -67,18 +67,22 @@ function init() {
         //recieves all active users from server
         else if (message.msg === "username_list") {
             app.users = message.data;
+            console.log("NEW username list from server");
             console.log(app.users);
         }
         //recieves leaderboard message from server
         else if (message.msg == "leaderboard") {
             updateLeaderboard(message.data);
             //app.leaderboard = message.data;
+            console.log("NEW leaderboard from server");
             console.log(message.data);
         }
-        else if (message.msg == "stats"){
+        else if (message.msg == "stats") {
+            console.log("NEW stats list from the server");
             updateStats(message.data);
         }
-        else if(message.msg == "chat"){
+        else if (message.msg == "chat") {
+            console.log("NEW chat from the server");
             app.chats.push(message.data);
         }
     };
@@ -86,20 +90,20 @@ function init() {
 
 //var group = document.getElementById("group").textContent;
 
-function send(msg){
-    ws.send(JSON.stringify({msg:msg}));
+function send(msg) {
+    ws.send(JSON.stringify({ msg: msg }));
 }
 
-function broadcast(msg,room){
+function broadcast(msg, room) {
     console.log("In broadcast, room: " + room);
-    ws.send(JSON.stringify({room:room,msg:msg}))
- }
-
-function join(room){
-    ws.send(JSON.stringify({join:room}));
+    ws.send(JSON.stringify({ room: room, msg: msg }))
 }
 
-function bjoin(group){
+function join(room) {
+    ws.send(JSON.stringify({ join: room }));
+}
+
+function bjoin(group) {
     //alert(group);
     //var group = document.getElementById("group").textContent;
     app.currentGroup = group;
@@ -109,7 +113,7 @@ function bjoin(group){
 
 }
 
-function sendMessage(){
+function sendMessage() {
     var chatMessage = document.getElementById(app.currentGroup).value;
     console.log("chatMessage: " + chatMessage);
     chatMessage = username + ": " + chatMessage;
@@ -124,45 +128,45 @@ text.onchange=function(el){
 }
 */
 
-function showModalFunction(username){
+function showModalFunction(username) {
     console.log("this username was clicked: " + username);
     app.currentUserModal = username;
-    for(var i = 0; i < app.userStats.length; i++){
-        if(username == app.userStats[i].username){
+    for (var i = 0; i < app.userStats.length; i++) {
+        if (username == app.userStats[i].username) {
             app.currentUserStatsModal = app.userStats[i].data;
         }
     }
-    console.log("HIIII");
-    console.log(app.currentUserStatsModal);
+    //console.log("HIIII");
+    //console.log(app.currentUserStatsModal);
     app.showModal = true;
     openModal();
 }
 
-function openModal(){
+function openModal() {
     modal = document.getElementById("userModal");
     modal.style.display = "block";
 }
 
-function closeModal(){
+function closeModal() {
     modal.style.display = "none";
 }
 
 
-function updateStats(data){
+function updateStats(data) {
     var i;
-    for(i = 0; i < data.length; i = i+3){
-        var userJSON = {username: data[i].username, data: []};
-        for(var j = i; j < (i+3); j++){
+    for (i = 0; i < data.length; i = i + 3) {
+        var userJSON = { username: data[i].username, data: [] };
+        for (var j = i; j < (i + 3); j++) {
             var userData;
             var updatedTime = false;
-            for(var z = 0; z < app.leaderboard.length; z++){
-                if(app.leaderboard[z].difficulty == data[j].difficulty && app.leaderboard[z].username == data[j].username){
-                    userData = {difficulty: data[j].difficulty, time: app.leaderboard[z].time, games_played: data[j].games_played};
+            for (var z = 0; z < app.leaderboard.length; z++) {
+                if (app.leaderboard[z].difficulty == data[j].difficulty && app.leaderboard[z].username == data[j].username) {
+                    userData = { difficulty: data[j].difficulty, time: app.leaderboard[z].time, games_played: data[j].games_played };
                     updatedTime = true;
                 }
             }
-            if(updatedTime == false){
-                userData = {difficulty: data[j].difficulty, time: "N/A", games_played: data[j].games_played};
+            if (updatedTime == false) {
+                userData = { difficulty: data[j].difficulty, time: "N/A", games_played: data[j].games_played };
             }
             userJSON.data.push(userData);
         }
@@ -179,9 +183,9 @@ function updateLeaderboard(data) {
     for (var i = 0; i < data.length; i++) {
         app.leaderboard.push(data[i]);
         if (data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)) {
-            console.log("pushed");
-            console.log(app.leaderboardBeginner);
-            console.log("Data[i]: " + data[i]);
+            //console.log("pushed");
+            //console.log(app.leaderboardBeginner);
+            //console.log("Data[i]: " + data[i]);
             app.leaderboardBeginner.push(data[i]);
         }
         else if (data[i].difficulty == 1 && !(app.leaderboardNovice.filter(e => e.username == data[i].username).length > 0)) {
@@ -296,7 +300,7 @@ function changeDifficulty(diff) {
     addOverlay();
 }
 
-function incrementGamesPlayed(){
+function incrementGamesPlayed() {
     message = {
         difficulty: app.difficultyValue,
         time: "gamesPlayed"
