@@ -63,31 +63,32 @@ wss.on("connection", ws => {
     clients[client_id] = ws;
     addClient(client_id);
 
-    ws.room=[];
+    ws.room = [];
 
     ws.on("message", message => {
         console.log("Message from " + client_id + ": " + message);
         var parsedMessage = JSON.parse(message);
 
-        if(parsedMessage.join){
+        if (parsedMessage.join) {
             console.log(".join: " + parsedMessage.join);
             ws.room.push(parsedMessage.join);
         }
-        if(parsedMessage.room){
+        if (parsedMessage.room) {
             console.log(".room: " + parsedMessage.join);
             broadcast(message);
         }
-        if(parsedMessage.msg){
+        if (parsedMessage.msg) {
             console.log('.message: ', parsedMessage.msg);
         }
-        
+
         //update number of games played
-        if(parsedMessage.time == "gamesPlayed"){
+        if (parsedMessage.time == "gamesPlayed") {
             addGamePlayed(client_id, parsedMessage);
             updateClientsStats();
         }
         //console.log(client_username);
-        else{
+        else {
+            console.log("Recieved a leaderboard update. AKA someone won a game.");
             sendLeaderboard(client_id, message);
         }
     });
@@ -106,20 +107,20 @@ wss.on("connection", ws => {
     updateClientsStats();
 });
 
-function broadcast(message){
+function broadcast(message) {
     console.log("in broadcast function");
     var parsedMessage = JSON.parse(message);
-    var messageToSend = {msg: "chat", data: parsedMessage.msg};
+    var messageToSend = { msg: "chat", data: parsedMessage.msg };
     console.log("messageToSend: ");
     console.log(messageToSend);
-    wss.clients.forEach(client=>{
-        if(client.room.indexOf(JSON.parse(message).room)>-1){
+    wss.clients.forEach(client => {
+        if (client.room.indexOf(JSON.parse(message).room) > -1) {
             client.send(JSON.stringify(messageToSend))
         }
     });
 }
 
-function addGamePlayed(client_id, message){
+function addGamePlayed(client_id, message) {
     console.log("in the addGamePlayed");
     var username;
     var difficulty = message.difficulty;
@@ -129,7 +130,7 @@ function addGamePlayed(client_id, message){
         if (client_keys[i] == client_id) {
             username = client_usernames[i];
         }
-    }   
+    }
     console.log("username: " + username);
     db.all("SELECT * FROM stats WHERE username = ? AND difficulty = ?", [username, difficulty], (err, rows) => {
         if (err) {
@@ -145,8 +146,8 @@ function addGamePlayed(client_id, message){
                 throw err;
             }
         });
-        for(user in stats_list){
-            if(username == user.username && difficulty == user.difficulty){
+        for (user in stats_list) {
+            if (username == user.username && difficulty == user.difficulty) {
                 user.games_played = gamesPlayed;
             }
         }
@@ -159,6 +160,7 @@ function addGamePlayed(client_id, message){
 //Sends all clients the leaderboard
 //Called in sendLeaderboard()
 function updateClientsLeaderboard() {
+    console.log("Sending updated leaderboard to clients");
     var id;
     var leaderboardList = {
         msg: "leaderboard",
@@ -172,7 +174,7 @@ function updateClientsLeaderboard() {
 
 }
 
-function updateClientsStats(){
+function updateClientsStats() {
     var id;
     console.log("IN UPDATECLIENTSSTATS, stats_list:");
     console.log(stats_list);
@@ -193,11 +195,11 @@ function sendLeaderboard(client_id, message) {
     message = JSON.parse(message);
     var time = message.time;
     var difficulty = message.difficulty;
-    console.log("Clients List: ");
-    console.log(client_keys);
-    console.log(client_usernames);
-    console.log("Client id: ");
-    console.log(client_id);
+    //console.log("Clients List: ");
+    //console.log(client_keys);
+    //console.log(client_usernames);
+    //console.log("Client id: ");
+    //console.log(client_id);
 
     //Finds the corresponding username to the client_id
     for (var i = 0; i < client_keys.length; i++) {
@@ -205,6 +207,8 @@ function sendLeaderboard(client_id, message) {
             username = client_usernames[i];
         }
     }
+
+    console.log("Username of person who won: " + username);
 
     //If user has already added a time for a certain difficulty
     db.all("SELECT * FROM leaderboard WHERE username = ? AND difficulty = ?", [username, difficulty], (err, rows) => {
@@ -235,6 +239,7 @@ function sendLeaderboard(client_id, message) {
                 if (err) {
                     throw err;
                 }
+                console.log("NEW input into leaderboard database");
                 console.log("added " + username + " with a difficulty of " + difficulty + " time of " + time + " into the leaderboard");
             });
             leaderboard_list.push({
@@ -393,23 +398,23 @@ app.post("/create", (req, res) => {
                 console.log("Username: " + username);
                 console.log("Password: " + hashedPassword);
                 db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 0, 0], err => {
-                    if(err) {
+                    if (err) {
                         throw err;
                     }
                 });
-                stats_list.push({ username: username, difficulty: 0, games_played: 0}); 
+                stats_list.push({ username: username, difficulty: 0, games_played: 0 });
                 db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 1, 0], err => {
-                    if(err) {
+                    if (err) {
                         throw err;
                     }
                 });
-                stats_list.push({ username: username, difficulty: 1, games_played: 0});
-                 db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 2, 0], err => {
-                    if(err) {
+                stats_list.push({ username: username, difficulty: 1, games_played: 0 });
+                db.run("INSERT INTO stats(username, difficulty, games_played) VALUES(?,?,?)", [username, 2, 0], err => {
+                    if (err) {
                         throw err;
                     }
                 });
-                stats_list.push({ username: username, difficulty: 2, games_played: 0});
+                stats_list.push({ username: username, difficulty: 2, games_played: 0 });
                 db.run("INSERT INTO users(username, password, avatar) VALUES(?, ?, ?)", [username, hashedPassword, avatar], err => {
                     if (err) {
                         throw err;
@@ -424,12 +429,12 @@ app.post("/create", (req, res) => {
     }
 });
 
-function initialize(){
+function initialize() {
     initializeLeaderboard();
     initializeStats();
 }
 
-function initializeStats(){
+function initializeStats() {
     db.all("SELECT * FROM stats", (err, rows) => {
         //console.log(rows);
         for (var i = 0; i < rows.length; i++) {
