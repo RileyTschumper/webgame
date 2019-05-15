@@ -75,10 +75,10 @@
             </div>
             <div v-if="showChat">
                 <input v-bind:id="currentGroup" type="text" />
-                <button onclick="sendMessage()"> </button>
-                <ol v-for="messages in chats">
+                <button onclick="sendMessage()">Send Message</button>
+                <ul v-for="messages in chats">
                     <li> {{ messages }}</li>
-                </ol>
+                </ul>
             </div>
         </div>
 </body>
