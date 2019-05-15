@@ -225,9 +225,14 @@ function sendLeaderboard(client_id, message) {
                     }
                     console.log("added " + username + " with a difficulty of " + difficulty + " time of " + time + " into the leaderboard");
                 });
-                for (user in leaderboard_list) {
-                    if (username == user.username && difficulty == user.difficulty) {
-                        user.time = time;
+                console.log("THIS IS THE LEADERBOARD_LIST: ");
+                console.log(leaderboard_list);
+                for(var i = 0; i < leaderboard_list.length; i++){
+                    console.log("finding location in leaderboard_list to update");
+                    console.log("username: " + username + " == " + leaderboard_list[i].username + " && " + " difficulty: " + difficulty + " user.difficulty: " + leaderboard_list[i].difficulty);
+                    if (username == leaderboard_list[i].username && difficulty == leaderboard_list[i].difficulty) {
+                        console.log("Updated in leaderboard_list");
+                        leaderboard_list[i].time = time;
                     }
                 }
                 updateClientsLeaderboard();
@@ -330,9 +335,20 @@ app.get("/home", (req, res) => {
             var index = data.replace("|||USER|||", req.session.username);
             res.send(index);
         });
-        client_usernames.push(req.session.username);
-        sendUsernameList();
-        currUsername = req.session.username;
+        db.all("SELECT * FROM users WHERE username = ?", [req.session.username], (err, rows) => {
+            if (err) {
+                throw err;
+            }
+
+            if(rows.length > 0){
+                client_usernames.push({username: rows[0].username, avatar: rows[0].avatar});
+                sendUsernameList();
+                currUsername = req.session.username;
+            }
+        //client_usernames.push(req.session.username);
+        //sendUsernameList();
+        //currUsername = req.session.username;
+        });
     }
     //if not logged in, send to login page
     else {
@@ -451,7 +467,7 @@ function initializeStats() {
 //initialize the leaderboard when server is started
 function initializeLeaderboard() {
     db.all("SELECT * FROM leaderboard", (err, rows) => {
-        //console.log(rows);
+        console.log(rows);
         for (var i = 0; i < rows.length; i++) {
             leaderboard_list.push({
                 username: rows[i].username,
@@ -460,8 +476,8 @@ function initializeLeaderboard() {
             });
         }
     });
-    //console.log("LEADERBOARD: ");
-    //console.log(leaderboard_list);
+    console.log("LEADERBOARD: ");
+    console.log(leaderboard_list);
 }
 
 server.listen(port, "0.0.0.0", initialize());

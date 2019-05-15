@@ -11,6 +11,7 @@ function init() {
         data: {
             currentUserModal: "",
             currentUserStatsModal: [],
+            currentUserAvatar: "",
             showModal: false,
             leaderboard: [],
             chats: [],
@@ -72,10 +73,11 @@ function init() {
         }
         //recieves leaderboard message from server
         else if (message.msg == "leaderboard") {
-            updateLeaderboard(message.data);
+            //updateLeaderboard(message.data);
             //app.leaderboard = message.data;
             console.log("NEW leaderboard from server");
             console.log(message.data);
+            updateLeaderboard(message.data);
         }
         else if (message.msg == "stats") {
             console.log("NEW stats list from the server");
@@ -131,6 +133,13 @@ text.onchange=function(el){
 function showModalFunction(username) {
     console.log("this username was clicked: " + username);
     app.currentUserModal = username;
+    //app.currentUserAvatar = "";
+    for(var i = 0; i <app.users.length; i++){
+        if(app.users[i].username == username){
+            app.currentUserAvatar = app.users[i].avatar;
+        }
+    }
+    app.currentUserAvatar = "images/" + app.currentUserAvatar;
     for (var i = 0; i < app.userStats.length; i++) {
         if (username == app.userStats[i].username) {
             app.currentUserStatsModal = app.userStats[i].data;
@@ -204,6 +213,8 @@ function updateLeaderboard(data) {
     app.leaderboardExpert.sort(function(a,b) {
         return a.time - b.time;
     });
+    console.log("Beginner leaderboard: ");
+    console.log(app.leaderboardBeginner);
     console.log("leaderboard: ");
     console.log(app.leaderboard);
 }
