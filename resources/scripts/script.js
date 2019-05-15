@@ -104,6 +104,7 @@ function bjoin(group){
     //var group = document.getElementById("group").textContent;
     app.currentGroup = group;
     app.showChat = true;
+    app.chats = [];
     join(group);
 
 }
@@ -111,6 +112,7 @@ function bjoin(group){
 function sendMessage(){
     var chatMessage = document.getElementById(app.currentGroup).value;
     console.log("chatMessage: " + chatMessage);
+    chatMessage = username + ": " + chatMessage;
     console.log("currentGroup: " + app.currentGroup);
     broadcast(chatMessage, app.currentGroup);
 }

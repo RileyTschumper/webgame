@@ -84,15 +84,19 @@
         <div class="row justify-content-md-center">
         <div class="col-md-auto" v-for="groups in chatGroups">
             <h5>Group: <span >{{ groups }}</span></h5>
-            <!-- a hardcoded group name -->
             <button @click="bjoin(groups)">Join {{ groups }}</button><br>
         </div>
         </div>
-        <div v-if="showChat">
+        <div align="center" v-if="showChat">
+            <h4> You are now in the {{ currentGroup }} lobby! </h4>
             <input v-bind:id="currentGroup" type="text" />
             <button onclick="sendMessage()">Send Message</button>
             <ul v-for="messages in chats">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
                 <li> {{ messages }}</li>
+                </div>
+                </div>
             </ul>
         </div>
     </div>
