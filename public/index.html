@@ -83,10 +83,12 @@
         </div>
         <h4 align="center">Chat Rooms</h4>
         <div class="row justify-content-md-center">
-        <div class="col-md-auto" v-for="groups in chatGroups">
-            <h5>Group: <span >{{ groups }}</span></h5>
-            <button @click="bjoin(groups)">Join {{ groups }}</button><br>
-        </div>
+        <!--<div class="col-md-auto" v-for="groups in chatGroups">
+            <h5>Group: <span >{{ groups }}</span></h5> -->
+            <input id="group" type="text" />
+            <button onclick="bjoin()">Click to join a group</button>
+            <!-- <button @click="bjoin(groups)">Join {{ groups }}</button><br> 
+            </div> -->
         </div>
         <div align="center" v-if="showChat">
             <h4> You are now in the {{ currentGroup }} lobby! </h4>
