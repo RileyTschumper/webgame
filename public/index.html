@@ -99,17 +99,17 @@
                 </ul>
                 <h2> Beginner Leaderboard </h2>
                 <ol>
-                    <li v-for="leaderBeginner in leaderboardBeginner" @click="showModalFunction(leaderBeginner.username)">
+                    <li  style="cursor: pointer;" v-for="leaderBeginner in leaderboardBeginner" @click="showModalFunction(leaderBeginner.username)">
                         {{ leaderBeginner.username }} {{ leaderBeginner.time }}</li>
                 </ol>
                 <h2> Novice Leaderboard </h2>
                 <ol>
-                    <li v-for="leaderNovice in leaderboardNovice" @click="showModalFunction(leaderNovice.username)">
+                    <li style="cursor: pointer;" v-for="leaderNovice in leaderboardNovice" @click="showModalFunction(leaderNovice.username)">
                         {{ leaderNovice.username }} {{ leaderNovice.time }}</li>
                 </ol>
                 <h2> Expert Leaderboard </h2>
                 <ol>
-                    <li v-for="leaderExpert in leaderboardExpert" @click="showModalFunction(leaderExpert.username)">
+                    <li style="cursor: pointer;" v-for="leaderExpert in leaderboardExpert" @click="showModalFunction(leaderExpert.username)">
                         {{ leaderExpert.username }} {{ leaderExpert.time }}</li>
                 </ol>
                 <div id="userModal" class="modal">
