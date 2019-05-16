@@ -362,6 +362,19 @@ app.get("/", (req, res) => {
     }
 });
 
+//Route for aboutUs
+app.get("/aboutUs", (req, res) => {
+    //Already logged in, send to /home route
+    if (req.session.loggedin) {
+        console.log("going home");
+        res.redirect("/aboutUs");
+    }
+    //send login page
+    else {
+        res.sendFile(path.join(public_dir, "login.html"));
+    }
+})
+
 //Route for main index.html page
 app.get("/home", (req, res) => {
     if (req.session.loggedin) {
