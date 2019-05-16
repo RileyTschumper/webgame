@@ -71,7 +71,10 @@ wss.on("connection", ws => {
 
         if (parsedMessage.join) {
             console.log(".join: " + parsedMessage.join);
+            ws.room = [];
             ws.room.push(parsedMessage.join);
+            console.log("WS.room: ");
+            console.log(ws.room);
         }
         if (parsedMessage.room) {
             console.log(".room: " + parsedMessage.join);
@@ -87,7 +90,7 @@ wss.on("connection", ws => {
             updateClientsStats();
         }
         //console.log(client_username);
-        else {
+        else if(parsedMessage.time) {
             console.log("Recieved a leaderboard update. AKA someone won a game.");
             sendLeaderboard(client_id, message);
         }
