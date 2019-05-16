@@ -392,34 +392,6 @@ app.get("/home", (req, res) => {
 
 });
 
-app.get("/about", (req, res) => {
-    if (req.session.loggedin) {
-        fs.readFile(path.join(public_dir, "aboutUs.html"), "utf8", (err, data) => {
-            //console.log(data);
-            var index = data.replace("|||USER|||", req.session.username);
-            res.send(index);
-        });
-        db.all("SELECT * FROM users WHERE username = ?", [req.session.username], (err, rows) => {
-            if (err) {
-                throw err;
-            }
-
-            if(rows.length > 0){
-                client_usernames.push(req.session.username);
-                sendUsernameList();
-                currUsername = req.session.username;
-            }
-        //client_usernames.push(req.session.username);
-        //sendUsernameList();
-        //currUsername = req.session.username;
-        });
-    }
-    //if not logged in, send to login page
-    else {
-        res.redirect("/");
-    }
-
-});
 
 //Route for existing users to sign-in
 app.post("/auth", (req, res) => {
