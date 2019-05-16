@@ -1,0 +1,36 @@
+* {
+	margin: 0, auto;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    font-family: Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	background-color: rgb(137, 233, 255);
+	color: #0b3e49;
+}
+
+#riley {
+	margin-top: 1rem;
+}
+#lucy {
+	display: inline-block;
+}
+#vid{
+	margin-top: 1 rem;
+	display: inline-block;
+	clear:both;
+}
+#toolsUsed{
+	clear: both;
+}
+
+#aboutTools{
+	padding-left:1rem;
+	padding-right: 1rem;
+}
