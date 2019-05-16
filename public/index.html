@@ -94,6 +94,12 @@
             <h4> You are now in the {{ currentGroup }} lobby! </h4>
             <input v-bind:id="currentGroup" type="text" />
             <button onclick="sendMessage()">Send Message</button>
+            <div class="row justify-content-md-center">
+                <div class="chat_container col-md-8" v-for="messages in chats">
+                    <p> {{ messages }} </p>
+                </div>
+            </div>
+            <!--
             <ul v-for="messages in chats">
                 <div class="row justify-content-md-center">
                     <div class="col-md-auto">
@@ -101,6 +107,7 @@
                     </div>
                 </div>
             </ul>
+            -->
         </div>
     </div>
 </body>
