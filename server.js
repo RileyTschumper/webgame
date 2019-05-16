@@ -108,7 +108,39 @@ wss.on("connection", ws => {
     var message = { msg: "leaderboard", data: leaderboard_list }
     clients[client_id].send(JSON.stringify(message));
     updateClientsStats();
+    createAvatarList();
 });
+
+var avatarList = [];
+
+function createAvatarList(){
+    avatarList = [];
+    db.all("SELECT * FROM users", (err, rows) => {
+        if(err){
+            throw err;
+        }
+        for(var i = 0; i < rows.length; i++){
+            var message = {username: rows[i].username, avatar: rows[i].avatar};
+            avatarList.push(message);
+        }
+        sendAvatars();
+    });
+    
+}
+
+function sendAvatars(){
+    var id;
+    var avatarMessage = {
+        msg: "avatars",
+        data: avatarList
+    };
+    for (id in clients) {
+        if (clients.hasOwnProperty(id)) {
+            clients[id].send(JSON.stringify(avatarMessage));
+        }
+    }   
+}
+
 
 function broadcast(message) {
     console.log("in broadcast function");
@@ -344,7 +376,7 @@ app.get("/home", (req, res) => {
             }
 
             if(rows.length > 0){
-                client_usernames.push({username: rows[0].username, avatar: rows[0].avatar});
+                client_usernames.push(req.session.username);
                 sendUsernameList();
                 currUsername = req.session.username;
             }

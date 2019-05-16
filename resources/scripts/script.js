@@ -9,6 +9,7 @@ function init() {
     app = new Vue({
         el: "#app",
         data: {
+            userAvatars: "",
             currentUserModal: "",
             currentUserStatsModal: [],
             currentUserAvatar: "",
@@ -87,6 +88,11 @@ function init() {
             console.log("NEW chat from the server");
             app.chats.push(message.data);
         }
+        else if (message.msg == "avatars") {
+            console.log("RECEIVED AVATARS");
+            console.log(message.data);
+            app.userAvatars = message.data;
+        }
     };
 }
 
@@ -144,9 +150,13 @@ function showModalFunction(username) {
     console.log("this username was clicked: " + username);
     app.currentUserModal = username;
     //app.currentUserAvatar = "";
-    for(var i = 0; i <app.users.length; i++){
-        if(app.users[i].username == username){
-            app.currentUserAvatar = app.users[i].avatar;
+    console.log(app.userAvatars);
+    for(var i = 0; i <app.userAvatars.length; i++){
+        console.log("in for");
+        console.log(app.userAvatars[i]);
+        if(app.userAvatars[i].username == username){
+            //console.log("setting currentUserAvatar to: " + app.userAvatar[i].avatar);
+            app.currentUserAvatar = app.userAvatars[i].avatar;
         }
     }
     app.currentUserAvatar = "images/" + app.currentUserAvatar;
@@ -173,6 +183,7 @@ function closeModal() {
 
 function updateStats(data) {
     var i;
+    app.userStats = [];
     for (i = 0; i < data.length; i = i + 3) {
         var userJSON = { username: data[i].username, data: [] };
         for (var j = i; j < (i + 3); j++) {
@@ -199,18 +210,44 @@ function updateStats(data) {
 //This is called in init(), when the websocket recieves a message
 //of type leaderboard
 function updateLeaderboard(data) {
+    app.leaderboard = [];
     for (var i = 0; i < data.length; i++) {
         app.leaderboard.push(data[i]);
-        if (data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)) {
+        beginnerFilter = app.leaderboardBeginner.filter(e => e.username == data[i].username);
+        noviceFilter = app.leaderboardNovice.filter(e => e.username == data[i].username);
+        expertFilter = app.leaderboardExpert.filter(e => e.username == data[i].username);
+        //if (data[i].difficulty == 0 && !(app.leaderboardBeginner.filter(e => e.username == data[i].username).length > 0)) {
+        if (data[i].difficulty == 0 && !(beginnerFilter.length > 0)){
             //console.log("pushed");
             //console.log(app.leaderboardBeginner);
             //console.log("Data[i]: " + data[i]);
             app.leaderboardBeginner.push(data[i]);
         }
-        else if (data[i].difficulty == 1 && !(app.leaderboardNovice.filter(e => e.username == data[i].username).length > 0)) {
+        else if (data[i].difficulty == 0 && (beginnerFilter[0].time > data[i].time)){
+            console.log("found the same username, updating it NOW");
+            app.leaderboardBeginner = app.leaderboardBeginner.filter(e =>{
+                return e.username != data[i].username;
+            });
+            app.leaderboardBeginner.push(data[i]);
+        }
+        else if (data[i].difficulty == 1 && !(noviceFilter.length > 0)) {
             app.leaderboardNovice.push(data[i]);
         }
-        else if (data[i].difficulty == 2 && !(app.leaderboardExpert.filter(e => e.username == data[i].username).length > 0)) {
+        else if (data[i].difficulty == 1 && (noviceFilter[0].time > data[i].time)){
+            console.log("found the same username, updating it NOW");
+            app.leaderboardNovice = app.leaderboardNovice.filter(e =>{
+                return e.username != data[i].username;
+            });
+            app.leaderboardNovice.push(data[i]);
+        }
+        else if (data[i].difficulty == 2 && !(expertFilter.length > 0)) {
+            app.leaderboardExpert.push(data[i]);
+        }
+        else if (data[i].difficulty == 2 && (expertFilter[0].time > data[i].time)){
+            console.log("found the same username, updating it NOW");
+            app.leaderboardExpert = app.leaderboardExpert.filter(e =>{
+                return e.username != data[i].username;
+            });
             app.leaderboardExpert.push(data[i]);
         }
     }
