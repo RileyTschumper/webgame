@@ -9,6 +9,7 @@ function init() {
     app = new Vue({
         el: "#app",
         data: {
+            aboutUs: false,
             userAvatars: "",
             currentUserModal: "",
             currentUserStatsModal: [],
@@ -97,6 +98,42 @@ function init() {
 }
 
 //var group = document.getElementById("group").textContent;
+
+function showAbout(){
+    app.aboutUs = true;
+}
+
+function waitForElement(elementId, callback){
+    window.setTimeout(function(){
+        var element = document.getElementById(elementId);
+        if(element){
+            callback(elementId, element);
+        }else {
+            waitForElement(elementId, callback);
+        }
+    },500)
+}
+
+function showIndex(){
+    app.aboutUs = false;
+    waitForElement("game",function(){
+        console.log("done");
+        //updates the html canvas size based on board size
+    updateCanvas();
+
+    //creates a new stage
+    stage = new createjs.Stage("canvas");
+
+    //creates minesweeper board
+    createMinefield();
+
+    //adds listener on the stage
+    addStageListener();
+
+    //updates stage
+    stage.update();
+    });
+}
 
 function send(msg) {
     ws.send(JSON.stringify({ msg: msg }));
