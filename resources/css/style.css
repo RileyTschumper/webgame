@@ -12,6 +12,15 @@
     display: table;
 }
 
+.headshot{
+    width:300px;
+    height: auto;
+    float: left;
+    margin-left:2rem;
+    margin-right: 2rem;
+    margin-top:0.5rem;
+}
+
 #overlay {
     position: fixed; /* Sit on top of the page content */
     display: block; /* Hidden by default */
